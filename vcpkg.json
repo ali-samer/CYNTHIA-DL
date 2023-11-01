@@ -1,0 +1,9 @@
+{
+  "name" : "cynthia-dl",
+  "version-string" : "1.0.0",
+  "builtin-baseline" : "486a4640db740f5994e492eb60748111dfc48de7",
+  "dependencies" : [ {
+    "name" : "matplotlib-cpp",
+    "version>=" : "2020-08-27#2"
+  } ]
+}
