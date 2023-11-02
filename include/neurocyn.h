@@ -1,3 +1,3 @@
 #pragma once
 
-#include "../src/Core/GD.h"
+#include "Core/GD.h"

@@ -1,6 +1,6 @@
-#include "GD.h"
+#include "Core/GD.h"
 
-namespace neurocyn
+namespace cy
 {
 	std::optional<std::vector<double>> gradient_descent(std::function<double(double)> df,
 														double x,

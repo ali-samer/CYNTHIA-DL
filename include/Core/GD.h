@@ -10,7 +10,7 @@
 #include <iostream>
 #include <iomanip>
 
-namespace neurocyn
+namespace cy
 {
 	std::optional<std::vector<double>> gradient_descent(std::function<double(double)> df,
 														double x,
