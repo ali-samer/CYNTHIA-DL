@@ -60,11 +60,27 @@ namespace details
 		using type = TypeContainer< Pack... >;
 	};
 
+	template <typename T, typename... Types>
+	struct Contains;
+
+	template <typename T, typename... Types>
+	struct Contains<T, T, Types...> : std::true_type {};
+
+	template <typename T>
+	struct Contains<T> : std::false_type {};
+
+	template <typename T, typename U, typename... Types>
+	struct Contains<T, U, Types...> : Contains<T, Types...> {};
+
 	template <
 		typename Target ,
 		typename... RemainingTs
 	>
-	struct IndexOf;
+	struct IndexOf
+	{
+		static_assert( Contains<Target, RemainingTs...>::value, "Key not found in type list" );
+		static constexpr size_t value = IndexOf<Target, RemainingTs...>::value;
+	};
 
 	template <
 		typename Target ,
@@ -87,32 +103,6 @@ namespace details
 		>
 	{
 	};
-
-	template <
-		typename Target ,
-		typename... RemainingTs
-	>
-	struct IndexOf : public std::exception
-	{
-		const char* what() const noexcept override
-		{
-			return "Target not located within list...";
-		}
-	};
-
-	template <typename T, typename... Types>
-	struct Contains;
-
-
-	template <typename T, typename... Types>
-	struct Contains<T, T, Types...> : std::true_type {};
-
-	template <typename T>
-	struct Contains<T> : std::false_type {};
-
-	template <typename T, typename U, typename... Types>
-	struct Contains<T, U, Types...> : Contains<T, Types...> {};
-
 }
 
 namespace cydl
