@@ -53,7 +53,7 @@ option(CYDL_STANDALONE "Cynthia-DL: build standalone" ${CYDL_STANDALONE})
 # We check if we're building with MinGW (a development environment for Windows).
 # If we are, we default to not building shared libraries.
 if (MINGW)
-    set(BULD_SHARED_LIBS_DEFAULT OFF)
+    set(BUILD_SHARED_LIBS_DEFAULT OFF)
 else ()
     # If we're not using this environment, we do default to building shared libraries.
     set(BUILD_SHARED_LIBS_DEFAULT ON)

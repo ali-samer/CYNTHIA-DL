@@ -1,6 +1,6 @@
 #include "Core/GD.h"
 
-namespace cy
+namespace cydl
 {
 	std::optional<std::vector<double>> gradient_descent(std::function<double(double)> df,
 														double x,
