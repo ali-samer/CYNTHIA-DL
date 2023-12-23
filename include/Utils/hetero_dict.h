@@ -103,6 +103,7 @@ namespace details
 	template <typename T, typename... Types>
 	struct Contains;
 
+
 	template <typename T, typename... Types>
 	struct Contains<T, T, Types...> : std::true_type {};
 
