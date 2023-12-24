@@ -3,7 +3,7 @@
 #include "include_utils.h"
 #include "utils.h"
 
-namespace details
+namespace cydl::details
 {
 	template <
 		typename Target ,
@@ -24,7 +24,7 @@ namespace details
 		Target , LocTarget , NumOfScannedTs ,
 		TypeContainer< ModifiedTypes... > , CurrentT ,
 		RemainingTs...
-	>
+	> final
 	{
 		using type = typename NewTuple_<
 			Target , LocTarget , NumOfScannedTs + 1 ,
@@ -41,7 +41,7 @@ namespace details
 	struct NewTuple_<
 		Target, LocTarget, LocTarget, TypeContainer<ModifiedTypes...>,
 		CurrentT, RemainingTs...
-	>
+	> final
 	{
 		using type = TypeContainer<ModifiedTypes..., Target, RemainingTs...>;
 	};
@@ -54,7 +54,7 @@ namespace cydl
 		typename TypeContainer,
 		typename... RemainingTs
     >
-	using NewTuple_t = typename details::NewTuple_<
+	using Tuple_t = typename details::NewTuple_<
 	        Target, KeyPos, 0, TypeContainer, RemainingTs...
 	    >::type;
 
@@ -63,7 +63,7 @@ namespace cydl
 		typename TypeContainer,
 		typename... RemainingTs
 	>
-	using NewTuple = details::NewTuple_<
+	using Tuple = details::NewTuple_<
 		Target, KeyPos, 0, TypeContainer, RemainingTs...
 	>;
 }

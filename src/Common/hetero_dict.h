@@ -26,6 +26,9 @@
  */
 
 
+#include <stdlib.h>
+
+
 #include "include_utils.h"
 #include "utils.h"
 #include "new_tuple_type.h"
@@ -39,70 +42,81 @@
  **/
 namespace details
 {
+// InitContainer: Initializes a type container with a specified number of types.
+// If the number of provided types is less than NumOfTypeParams, it pads the container with NullParam.
+
+// Recursive case: Pad the container until the number of types reaches NumOfTypeParams.
 	template <
 		size_t NumOfTypeParams ,
-		template < typename... > class TypeContainer ,
-		                         typename... Pack
+		template < typename... > class TypeContainer , typename... Pack
 	>
 	struct InitContainer
 	{
-		static_assert( NumOfTypeParams , "You must specify < typename... keys > in order to `set` key-valued pairs to "
-		                                 "their corresponding identifiers." );
+		static_assert( NumOfTypeParams , "You must specify <typename... keys> to set "
+		                                 "key-valued pairs to their corresponding identifiers." );
 		using type = typename InitContainer< NumOfTypeParams - 1 , TypeContainer , NullParam , Pack... >::type;
 	};
 
-	template <
-		template < typename... > class TypeContainer ,
-		                         typename... Pack
-	>
+// Base case: When NumOfTypeParams reaches 0, stop padding and define the container type.
+	template < template < typename... > class TypeContainer , typename... Pack >
 	struct InitContainer< 0 , TypeContainer , Pack... >
 	{
 		using type = TypeContainer< Pack... >;
 	};
 
-	template <typename T, typename... Types>
-	struct Contains;
+// Contains: Checks if a type T is present in a list of types Types...
+	template < typename T , typename... Types >
+	struct Contains_;
 
-	template <typename T, typename... Types>
-	struct Contains<T, T, Types...> : std::true_type {};
-
-	template <typename T>
-	struct Contains<T> : std::false_type {};
-
-	template <typename T, typename U, typename... Types>
-	struct Contains<T, U, Types...> : Contains<T, Types...> {};
-
-	template <
-		typename Target ,
-		typename... RemainingTs
-	>
-	struct IndexOf
-	{
-		static_assert( Contains<Target, RemainingTs...>::value, "Key not found in type list" );
-		static constexpr size_t value = IndexOf<Target, RemainingTs...>::value;
-	};
-
-	template <
-		typename Target ,
-		typename... RemainingTs
-	>
-	struct IndexOf< Target , Target , RemainingTs... > :
-		std::integral_constant< size_t , 0 >
+// Base case: Type T is not found in the list.
+	template < typename T >
+	struct Contains_< T > : std::false_type
 	{
 	};
 
-	template <
-		typename Target ,
-		typename MissMatch ,
-		typename... RemainingTs
-	>
-	struct IndexOf< Target , MissMatch , RemainingTs... > :
-		std::integral_constant<
-			size_t ,
-			1 + IndexOf< Target , RemainingTs... >::value
-		>
+// Match found case: Type T matches the first type in the list.
+	template < typename T , typename... Types >
+	struct Contains_< T , T , Types... > : std::true_type
 	{
 	};
+
+// Recursive case: Type T does not match the first type in the list, continue searching.
+	template < typename T , typename MissMatch , typename... Types >
+	struct Contains_< T , MissMatch , Types... > : Contains_< T , Types... >
+	{
+	};
+
+	template < typename Target , typename... RemainingTs >
+	using Contains = Contains_< Target , RemainingTs... >;
+
+// IndexOf: Returns index of a type if a type Target is present in a list of types RemainingTs...
+	template < typename Target , typename... RemainingTs >
+	struct IndexOf_;
+
+// Base case: Target not found
+	template < typename Target >
+	struct IndexOf_< Target >
+	{
+		static constexpr size_t value = std::numeric_limits< size_t >::max( );
+	};
+
+// Recursive case: Target not matched, continue searching
+	template < typename Target , typename MissMatch , typename... RemainingTs >
+	struct IndexOf_< Target , MissMatch , RemainingTs... >
+	{
+		static constexpr size_t value = 1 + IndexOf_< Target , RemainingTs... >::value;
+	};
+
+// Match found case: Target matched, return current index
+	template < typename Target , typename... RemainingTs >
+	struct IndexOf_< Target , Target , RemainingTs... >
+	{
+		static constexpr size_t value = 0;
+	};
+
+// Alias template for user convenience
+	template < typename Target , typename... RemainingTs >
+	using IndexOf = IndexOf_< Target , RemainingTs... >;
 }
 
 namespace cydl
@@ -111,17 +125,17 @@ namespace cydl
 // to ensure flexibility the use of variadic templates is essential to both
 // template classes to set key-valued pairs
 	template < typename... Keys > // keys will be saved in Keys
-	class HeteroDict final
+	class Map final
 	{
 		template < typename... Vals > // Valued pairs will be saved in Vals in parallel with Keys
-		struct ValStrg
+		struct Value
 		{
 		public:
 			using TupleType = typename details::InitContainer< sizeof...( Vals ) , std::tuple >::Type;
 
-			ValStrg ( ) = default;
+			Value ( ) = default;
 
-			ValStrg ( std::shared_ptr< void >(&& input)[sizeof... ( Vals )] )
+			Value ( std::shared_ptr< void >(&& input)[sizeof... ( Vals )] )
 			{
 				for ( size_t i = 0 ; i < sizeof... ( Vals ) ; i++ )
 					m_tuple[ i ] = std::move( input[ i ] );
@@ -131,7 +145,7 @@ namespace cydl
 			constexpr auto Set ( Val && val ) &&
 			{
 				using namespace details;
-				constexpr static size_t TagPos = IndexOf< Key , Keys... >::val;
+				constexpr static size_t TagPos = IndexOf< Key , Keys... >::value;
 
 				using rawVal = std::decay_t< Val >;
 				rawVal* tmp = new rawVal( std::forward< Val >( val ) );
@@ -143,12 +157,28 @@ namespace cydl
 				                                               delete nptr;
 				                                             } );
 
-				using new_type = NewTuple_t< rawVal , TagPos , ValStrg< > , Vals... >;
+				using new_type = Tuple_t< rawVal , TagPos , Value< > , Vals... >;
 				return new_type( std::move( m_tuple ) );
 			}
 
 			template < typename Key >
-			constexpr auto & Get ( ) const;
+			constexpr auto & Get ( ) const
+			{
+				constexpr static size_t TagPos = details::IndexOf< Key , Keys... >::value;
+				if constexpr (TagPos == std::numeric_limits< std::decay_t< decltype( TagPos ) > >::max())
+				{
+					static std::decay_t<decltype(GetHelper<Key>())> defaultObject{};
+					return defaultObject;
+				}
+
+				auto ptr = std::static_pointer_cast< std::decay_t< decltype( GetHelper< Key >( ) )>>(
+					m_tuple[ TagPos ] );
+				return *ptr;
+			}
+
+		private:
+			template < typename Key >
+			static auto GetHelper ( ) -> typename std::tuple_element< details::IndexOf< Key , Keys... >::value , std::tuple< Keys...>>::type;
 
 		private:
 			std::shared_ptr< void > m_tuple[sizeof...( Vals )];
@@ -156,7 +186,7 @@ namespace cydl
 	public:
 		static auto Create ( )
 		{
-			using type = typename details::InitContainer< sizeof... ( Keys ) , ValStrg >::type;
+			using type = typename details::InitContainer< sizeof... ( Keys ) , Value >::type;
 			return type { };
 		}
 
