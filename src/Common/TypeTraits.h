@@ -11,7 +11,7 @@
 #include <functional>
 
 
-namespace cyml
+namespace cydl
 {
 
 	template < class Fun >

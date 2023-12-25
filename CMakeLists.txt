@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.2)
+cmake_minimum_required(VERSION 3.10.0)
 
 # Here, a project declaration is made with the name "Cynthia-DL" and version "0.1.0".
 # CMake will use this to create variables <PROJECT-NAME>_SOURCE_DIR, <PROJECT-NAME>_BINARY_DIR, and others. Additionally, project-specific build properties can be set.
@@ -6,6 +6,25 @@ project(Cynthia-DL VERSION 0.1.0 )
 
 
 set(CMAKE_CXX_STANDARD 23)
+
+
+# Remove this block after bumping CMake to v3.21.0
+# PROJECT_IS_TOP_LEVEL is defined then by default
+if(CMAKE_VERSION VERSION_LESS 3.21.0)
+    if(CMAKE_SOURCE_DIR STREQUAL CMAKE_CURRENT_SOURCE_DIR)
+        set(PROJECT_IS_TOP_LEVEL TRUE)
+    else()
+        set(PROJECT_IS_TOP_LEVEL FALSE)
+    endif()
+endif()
+
+if(PROJECT_IS_TOP_LEVEL)
+    set(CMAKE_CXX_STANDARD 20 CACHE STRING "Default C++ standard")
+    set(CMAKE_CXX_STANDARD_REQUIRED ON CACHE BOOL "Require C++ standard")
+    set(CMAKE_CXX_EXTENSIONS OFF CACHE BOOL "Allow C++ extensions")
+endif()
+
+
 ########################################################
 ## Compile Commands and Output Directories
 ########################################################
@@ -201,6 +220,7 @@ endforeach()
 message("src files: ${SRC_FILES}")
 
 include_directories(include)
+include_directories(${CMAKE_SOURCE_DIR}/src)
 include_directories(vendor/src/xtl/include)
 include_directories(vendor/src/xtensor/include)
 include_directories(vendor/src)
