@@ -44,12 +44,12 @@ namespace cydl::detials { \
 /// \Purpose: used to define value policy object templates
 #define CYDL_VALUE_POLICY_TEMPLATE(PolicyName, Major, Minor) \
 namespace cydl::detials { \
-    template <RemConstRef<decltype(Major::Minor)> T> \
+    template <cydl::utils::RemConstRef<decltype(Major::Minor)> T> \
     struct PolicyName : virtual public Major { \
         using MinorClass = Major::Minor##ValueCate; \
     private: \
         using type1 = decltype(Major::Minor); \
-        using type2 = RemoveConstRef_t<type1>; \
+        using type2 = cydl::utils::RemoveConstRef_t<type1>; \
     public: \
         static constexpr type2 Minor = T; \
     }; \

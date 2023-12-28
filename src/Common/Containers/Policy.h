@@ -6,7 +6,7 @@ namespace cydl::details
 	struct PolicyContainer;
 
 	template < typename... Policies >
-	using Policy = PolicyContainer < Policies... >;
+	using Policies = PolicyContainer < Policies... >;
 
 	template < typename... T >
 	constexpr static bool IsPolicyContainer = false;
