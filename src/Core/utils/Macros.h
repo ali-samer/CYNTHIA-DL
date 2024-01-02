@@ -1,99 +1,133 @@
-#pragma once
-
-#define CYDL_MAJOR_VERSION 0
-#define CYDL_MINOR_VERSION 1
-#define CYDL_PATCH_VERSION 0
+#ifdef CYDL_DEFINE_GLOBAL_MACROS
 
 
-#define CYDL_VERSION_AT_LEAST(x,y,z) (CYDL_MAJOR_VERSION>x || (CYDL_MAJOR_VERSION>=x && \
+#ifndef CYDL_VERSIONING_MACROS
+#   define CYDL_MAJOR_VERSION 0
+#   define CYDL_MINOR_VERSION 1
+#   define CYDL_PATCH_VERSION 0
+#endif
+
+
+#define CYDL_VERSION_AT_LEAST( x , y , z ) (CYDL_MAJOR_VERSION>x || (CYDL_MAJOR_VERSION>=x && \
                                       (CYDL_MINOR_VERSION>y || (CYDL_MINOR_VERSION>=y && \
                                                                  CYDL_PATCH_VERSION>=z))))
 
 // C++ feature support
 #if __cplusplus >= 201103L
-#define CYDL_NOEXCEPT noexcept
-#define CYDL_CONSTEXPR constexpr
-#define CYDL_NULLPTR nullptr
-#define CYDL_OVERRIDE override
-#define CYDL_FINAL final
+#   define CYDL_NOEXCEPT noexcept
+#   define CYDL_CONSTEXPR constexpr
+#   define CYDL_NULLPTR nullptr
+#   define CYDL_OVERRIDE override
+#   define CYDL_FINAL final
 #else
-#define CYDL_NOEXCEPT
-#define CYDL_CONSTEXPR
-#define CYDL_NULLPTR 0
-#define CYDL_OVERRIDE
-#define CYDL_FINAL
+#   define CYDL_NOEXCEPT throw()
+#   define CYDL_CONSTEXPR
+#   define CYDL_NULLPTR 0
+#   define CYDL_OVERRIDE
+#   define CYDL_FINAL
 #endif
+
+// valid macros since C++98
+#define CYDL_STRONG_INLINE inline
+#define CYDL_STRONG_EXPLICIT explicit
 
 // Compiler detection
 #ifdef __GNUC__
-#define CYDL_COMP_GNUC (__GNUC__*10 + __GNUC_MINOR__)
+#   define CYDL_COMP_GNUC (__GNUC__*10 + __GNUC_MINOR__)
 #else
-#define CYDL_COMP_GNUC 0
+#   define CYDL_COMP_GNUC 0
 #endif
 
 #ifdef __clang__
-#define CYDL_COMP_CLANG (__clang_major__*100 + __clang_minor__)
+#   define CYDL_COMP_CLANG (__clang_major__*100 + __clang_minor__)
 #else
-#define CYDL_COMP_CLANG 0
+#   define CYDL_COMP_CLANG 0
 #endif
 
 #ifdef __llvm__
-#define CYDL_COMP_LLVM 1
+#   define CYDL_COMP_LLVM 1
 #else
-#define CYDL_COMP_LLVM 0
+#   define CYDL_COMP_LLVM 0
 #endif
 
 #ifdef __INTEL_COMPILER
-#define CYDL_COMP_ICC __INTEL_COMPILER
+#   define CYDL_COMP_ICC __INTEL_COMPILER
 #else
-#define CYDL_COMP_ICC 0
+#   define CYDL_COMP_ICC 0
 #endif
 
 #ifdef __MINGW32__
-#define CYDL_COMP_MINGW 1
+#   define CYDL_COMP_MINGW 1
 #else
-#define CYDL_COMP_MINGW 0
+#   define CYDL_COMP_MINGW 0
 #endif
 
 #ifdef __SUNPRO_CC
-#define CYDL_COMP_SUNCC 1
+#   define CYDL_COMP_SUNCC 1
 #else
-#define CYDL_COMP_SUNCC 0
+#   define CYDL_COMP_SUNCC 0
 #endif
 
 #ifdef _MSC_VER
-#define CYDL_COMP_MSVC _MSC_VER
+#   define CYDL_COMP_MSVC _MSC_VER
 #else
-#define CYDL_COMP_MSVC 0
+#   define CYDL_COMP_MSVC 0
 #endif
 
-#ifdef __IBMCPP__ || defined(__xlc__)
-#define CYDL_COMP_IBM 1
+#if defined(__IBMCPP__) || defined(__xlc__)
+#   define CYDL_COMP_IBM 1
 #else
-#define CYDL_COMP_IBM 0
+#   define CYDL_COMP_IBM 0
 #endif
 
 #ifdef __PGI
-#define CYDL_COMP_PGI 1
+#   define CYDL_COMP_PGI 1
 #else
-#define CYDL_COMP_PGI 0
+#   define CYDL_COMP_PGI 0
 #endif
 
-#ifdef __CC_ARM || defined(__ARMCC_VERSION)
-#define CYDL_COMP_ARM 1
+#if defined(__CC_ARM) || defined(__ARMCC_VERSION)
+#   define CYDL_COMP_ARM 1
 #else
-#define CYDL_COMP_ARM 0
+#   define CYDL_COMP_ARM 0
 #endif
 
 #ifdef __EMSCRIPTEN__
-#define CYDL_COMP_EMSCRIPTEN 1
+#   define CYDL_COMP_EMSCRIPTEN 1
 #else
-#define CYDL_COMP_EMSCRIPTEN 0
+#   define CYDL_COMP_EMSCRIPTEN 0
 #endif
 
 // Strict MSVC check
-#if CYDL_COMP_MSVC && !(CYDL_COMP_ICC || CYDL_COMP_LLVM || CYDL_COMP_CLANG)
-#define CYDL_COMP_MSVC_STRICT _MSC_VER
+#if CYDL_COMP_MSVC && !( CYDL_COMP_ICC || CYDL_COMP_LLVM || CYDL_COMP_CLANG )
+#   define CYDL_COMP_MSVC_STRICT _MSC_VER
 #else
-#define CYDL_COMP_MSVC_STRICT 0
+#   define CYDL_COMP_MSVC_STRICT 0
 #endif
+
+#define CYDL_RETURN_ON_FAIL( expr ) do { if (!(expr)) return 0; } while (0)
+#define CYDL_CONCAT( X , Y ) X##Y
+#define CYDL_CONCAT_3( X , Y , Z ) X##Y##Z
+#define CYDL_CONCAT_WITH_DELIMITER( X , _CYDL_DELIMITER , Z ) CYDL_CONCAT_3(X, _CYDL_DELIMITER, Z)
+
+#ifndef CYDL_VERSIONING
+#   define CYDL_VERSIONING 1
+#   define CYDL_VERSIONING_MAJOR_MINOR CYDL_CONCAT_WITH_DELIMITER(CYDL_MAJOR_VERSION, _, CYDL_MINOR_VERSION)
+#   define CYDL_VERSIONING_FORMAT CYDL_VERSIONING_MAJOR_MINOR
+#   define CYDL_VERSIONING_DETAIL CYDL_VERSIONING_FORMAT
+#endif
+
+#ifndef CYDL_VERSIONING_NAMESPACE
+#   define CYDL_VERSIONING_NAMESPACE CYDL_CONCAT(cydl_version_, CYDL_VERSIONING_DETAIL)
+#endif
+
+// Inline namespace for versioning control
+#define CYDL_BEGIN_LIB_NAMESPACE namespace cydl { inline namespace CYDL_VERSIONING_NAMESPACE {
+#define CYDL_BEGIN_LIB_DETAILS_NAMESPACE namespace details { inline namespace CYDL_VERSIONING_NAMESPACE {
+#define CYDL_END_LIB_NAMESPACE }}
+#define CYDL_END_LIB_DETAILS_NAMESPACE }}
+
+#define CYDL_VDETAILS cydl::details::CYDL_VERSIONING_NAMESPACE
+
+#define CYDL_TEMPLATE_DEFAULT_CFLAG __attribute__((__visibility__("default")))
+#endif // End CYDL_DEFINE_MACROS

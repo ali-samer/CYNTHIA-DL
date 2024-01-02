@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.10.0)
+cmake_minimum_required(VERSION 3.16.0)
 
 # Here, a project declaration is made with the name "Cynthia-DL" and version "0.1.0".
 # CMake will use this to create variables <PROJECT-NAME>_SOURCE_DIR, <PROJECT-NAME>_BINARY_DIR, and others. Additionally, project-specific build properties can be set.
@@ -64,6 +64,10 @@ else ()
 endif ()
 
 option(CYDL_STANDALONE "Cynthia-DL: build standalone" ${CYDL_STANDALONE})
+if (CYDL_STANDALONE)
+    add_definitions(-DCYDL_STANDALONE)
+    message(STATUS "Cynthia-DL: build standalone")
+endif ()
 
 
 ########################################################
@@ -100,6 +104,15 @@ option(CYDL_ALL_WARNINGS_3RD_PARTY "Cynthia-DL: enable all compiler warnings in 
 option(CYDL_SANITIZE_THREAD "Cynthia-DL: enable thread sanitizer" OFF)
 option(CYDL_SANITIZE_ADDRESS "Cynthia-DL: enable address sanitizer" OFF)
 option(CYDL_SANITIZE_UNDEFINED "Cynthia-DL: enable undefined sanitizer" OFF)
+
+########################################################
+## Enable User Macro Definitions:
+########################################################
+option(CYDL_GLOBAL_MACROS "Cynthia-DL: enable global utility macros" ON)
+if (CYDL_GLOBAL_MACROS)
+    add_definitions(-DCYDL_DEFINE_GLOBAL_MACROS)
+    message(STATUS "Enable cynthia's global utility macros")
+endif ()
 
 
 ########################################################
@@ -224,8 +237,10 @@ include_directories(${CMAKE_SOURCE_DIR}/src)
 include_directories(vendor/src/xtl/include)
 include_directories(vendor/src/xtensor/include)
 include_directories(vendor/src)
+include_directories(src/Core/utils)
 
 
 add_subdirectory(vendor/src/xtensor)
 
 add_executable(cynthia Sandbox/src/main.cpp ${SRC_FILES})
+target_precompile_headers(cynthia PUBLIC src/Core/utils/Macros.h)

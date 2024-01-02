@@ -15,12 +15,12 @@ namespace cydl::utils
 {
 
 	template < class Fun >
-	class y_combinator_result
+	class [[maybe_unused]] SelfCallable
 	{
 		Fun fun_;
 	public:
 		template < class T >
-		explicit y_combinator_result ( T && fun ): fun_( std::forward< T >( fun ) ) { }
+		[[maybe_unused]] CYDL_STRONG_EXPLICIT SelfCallable ( T && fun ): fun_( std::forward< T >( fun ) ) { }
 
 		template < class ...Args >
 		decltype( auto ) operator() ( Args && ...args )
@@ -52,7 +52,7 @@ namespace cydl::utils
 	template < typename T >
 	using UnsignedMap_t = typename UnsignedMap< T >::type;
 
-	///
+
 	template < bool AddOrRemoveRef >
 	struct TypeReferenceModifier;
 
@@ -67,7 +67,7 @@ namespace cydl::utils
 	template < bool AddOrRemoveRef , typename T >
 	using TypeReferenceModifier_t = typename TypeReferenceModifier< AddOrRemoveRef >::template Modifier< T >;
 
-	///
+
 	template < typename T >
 	struct RemoveConstRef
 	{
@@ -78,5 +78,5 @@ namespace cydl::utils
 	};
 
 	template < typename T >
-	using RemoveConstRef_t = RemoveConstRef< T >::type;
+	using RemoveConstRef_t = typename RemoveConstRef< T >::type;
 }

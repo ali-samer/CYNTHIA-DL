@@ -2,6 +2,7 @@
 
 #include "../IncludeUtils.h"
 #include "../Utils.h"
+#include "Core/utils/Macros.h"
 
 namespace cydl::details
 {
@@ -24,7 +25,7 @@ namespace cydl::details
 		Target , LocTarget , NumOfScannedTs ,
 		TypeContainer< ModifiedTypes... > , CurrentT ,
 		RemainingTs...
-	> final
+	> CYDL_FINAL
 	{
 		using type = typename NewTuple_<
 			Target , LocTarget , NumOfScannedTs + 1 ,
@@ -41,7 +42,7 @@ namespace cydl::details
 	struct NewTuple_<
 		Target, LocTarget, LocTarget, TypeContainer<ModifiedTypes...>,
 		CurrentT, RemainingTs...
-	> final
+	> CYDL_FINAL
 	{
 		using type = TypeContainer<ModifiedTypes..., Target, RemainingTs...>;
 	};
@@ -63,9 +64,7 @@ namespace cydl
 		typename TypeContainer,
 		typename... RemainingTs
 	>
-	using Tuple = details::NewTuple_<
+	 using Tuple = details::NewTuple_<
 		Target, KeyPos, 0, TypeContainer, RemainingTs...
 	>;
 }
-
-

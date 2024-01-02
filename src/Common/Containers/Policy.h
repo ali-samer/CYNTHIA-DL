@@ -3,7 +3,7 @@
 namespace cydl::details
 {
 	template < typename... Policies >
-	struct PolicyContainer;
+	class PolicyContainer;
 
 	template < typename... Policies >
 	using Policies = PolicyContainer < Policies... >;
