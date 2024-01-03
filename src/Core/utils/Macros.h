@@ -29,6 +29,7 @@
 
 // valid macros since C++98
 #define CYDL_STRONG_INLINE inline
+#define CYDL_FORCE_INLINE __attribute__((always_inline)) inline
 #define CYDL_STRONG_EXPLICIT explicit
 
 // Compiler detection
@@ -105,6 +106,124 @@
 #   define CYDL_COMP_MSVC_STRICT 0
 #endif
 
+
+#ifdef __x86_64__
+#   define CYDL_ARCH_X86_64 1
+#elif defined(__i386__)
+#   define CYDL_ARCH_X86_32 1
+#elif defined(__aarch64__)
+#   define CYDL_ARCH_ARM64 1
+#elif defined(__arm__)
+#   define CYDL_ARCH_ARM32 1
+#elif defined(_M_X64) || defined(_M_AMD64)
+#   define CYDL_ARCH_MS_X64 1
+#elif defined(_M_IX86)
+#   define CYDL_ARCH_MS_X86 1
+#elif defined(__powerpc64__) || defined(__ppc64__) || defined(__PPC64__)
+#   define CYDL_ARCH_PPC64 1
+#elif defined(__powerpc__) || defined(__ppc__) || defined(__PPC__)
+#   define CYDL_ARCH_PPC32 1
+#elif defined(__sparc64__)
+#   define CYDL_ARCH_SPARC64 1
+#elif defined(__sparc__)
+#   define CYDL_ARCH_SPARC32 1
+#elif defined(__mips64)
+#   define CYDL_ARCH_MIPS64 1
+#elif defined(__mips__)
+#   define CYDL_ARCH_MIPS32 1
+#else
+#   define CYDL_ARCH_UNKNOWN 1
+#endif
+
+
+#include <cstdint>
+#include <cstdio>
+
+/// \Architecture macro identifiers defined above
+
+// Define CYDL_MAX_SIZE based on the identified architecture
+#if defined(CYDL_ARCH_X86_64) || defined(CYDL_ARCH_ARM64) || defined(CYDL_ARCH_MS_X64) || \
+    defined(CYDL_ARCH_PPC64) || defined(CYDL_ARCH_SPARC64) || defined(CYDL_ARCH_MIPS64)
+#define CYDL_MAX_SIZE SIZE_MAX
+#else
+#define CYDL_MAX_SIZE UINT32_MAX
+#endif
+typedef std::size_t CYDL_SIZET;
+
+#ifdef CYDL_ARCH_X86_64
+typedef long long CYDL_INT64;
+typedef int CYDL_INT32;
+typedef short CYDL_INT16;
+typedef char CYDL_INT8;
+
+typedef double CYDL_FLOAT64;
+typedef float CYDL_FLOAT32;
+
+#elif defined(CYDL_ARCH_X86_32) || defined(CYDL_ARCH_MS_X64) || defined(CYDL_ARCH_MS_X86)
+typedef long long CYDL_INT64;
+typedef int CYDL_INT32;
+typedef short CYDL_INT16;
+typedef char CYDL_INT8;
+
+typedef double CYDL_FLOAT64;
+typedef float CYDL_FLOAT32;
+
+#elif defined(CYDL_ARCH_ARM64) || defined(CYDL_ARCH_AARCH64)
+typedef long long CYDL_INT64;
+typedef int CYDL_INT32;
+typedef short CYDL_INT16;
+typedef char CYDL_INT8;
+
+typedef double CYDL_FLOAT64;
+typedef float CYDL_FLOAT32;
+
+#elif defined(CYDL_ARCH_ARM32) || defined(CYDL_ARCH_ARM)
+typedef long long CYDL_INT64;
+typedef int CYDL_INT32;
+typedef short CYDL_INT16;
+typedef char CYDL_INT8;
+
+typedef double CYDL_FLOAT64;
+typedef float CYDL_FLOAT32;
+
+#elif defined(CYDL_ARCH_PPC64) || defined(CYDL_ARCH_PPC32)
+typedef long long CYDL_INT64;
+typedef int CYDL_INT32;
+typedef short CYDL_INT16;
+typedef char CYDL_INT8;
+
+typedef double CYDL_FLOAT64;
+typedef float CYDL_FLOAT32;
+
+#elif defined(CYDL_ARCH_SPARC64) || defined(CYDL_ARCH_SPARC32)
+typedef long CYDL_INT64;
+typedef int CYDL_INT32;
+typedef short CYDL_INT16;
+typedef char CYDL_INT8;
+
+typedef double CYDL_FLOAT64;
+typedef float CYDL_FLOAT32;
+
+#elif defined(CYDL_ARCH_MIPS64) || defined(CYDL_ARCH_MIPS32)
+typedef long long CYDL_INT64;
+typedef int CYDL_INT32;
+typedef short CYDL_INT16;
+typedef char CYDL_INT8;
+
+typedef double CYDL_FLOAT64;
+typedef float CYDL_FLOAT32;
+
+#else // Unknown architecture
+typedef long long CYDL_INT64;
+typedef int CYDL_INT32;
+typedef short CYDL_INT16;
+typedef char CYDL_INT8;
+
+typedef double CYDL_FLOAT64;
+typedef float CYDL_FLOAT32;
+
+#endif
+
 #define CYDL_RETURN_ON_FAIL( expr ) do { if (!(expr)) return 0; } while (0)
 #define CYDL_CONCAT( X , Y ) X##Y
 #define CYDL_CONCAT_3( X , Y , Z ) X##Y##Z
@@ -124,10 +243,29 @@
 // Inline namespace for versioning control
 #define CYDL_BEGIN_LIB_NAMESPACE namespace cydl { inline namespace CYDL_VERSIONING_NAMESPACE {
 #define CYDL_BEGIN_LIB_DETAILS_NAMESPACE namespace details { inline namespace CYDL_VERSIONING_NAMESPACE {
+#define CYDL_BEGIN_LIB_POLICIES_NAMESPACE namespace policies { inline namespace CYDL_VERSIONING_NAMESPACE {
+#define CYDL_BEGIN_LIB_UTILS_NAMESPACE namespace utils { inline namespace CYDL_VERSIONING_NAMESPACE {
 #define CYDL_END_LIB_NAMESPACE }}
 #define CYDL_END_LIB_DETAILS_NAMESPACE }}
+#define CYDL_END_LIB_POLICIES_NAMESPACE }}
+#define CYDL_END_LIB_UTILS_NAMESPACE }}
 
 #define CYDL_VDETAILS cydl::details::CYDL_VERSIONING_NAMESPACE
+#define CYDL_VPOLICIES cydl::policies::CYDL_VERSIONING_NAMESPACE
+#define CYDL_VUTILS cydl::utils::CYDL_VERSIONING_NAMESPACE
+
+#define CYDL_DEFAULT_ALLOCATION_SPACE 500
+#define CYDL_DEFAULT_EXPANSION_SPACE 100
+
+/// \MEMORY_INITIALIZATION \a cydl memory pool initial size could be set by user upon compilation
+#ifndef CYDL_MEMORY_POOL_SIZE
+	#define CYDL_MEMORY_POOL_SIZE CYDL_DEFAULT_ALLOCATION_SPACE
+#endif
+
+/// \MEMORY_EXPANSION \a cydl memory pool expansion size could be set by user upon compilation
+#ifndef CYDL_MEMORY_POOL_EXPANSION_SIZE
+	#define CYDL_MEMORY_POOL_EXPANSION_SIZE CYDL_DEFAULT_EXPANSION_SPACE
+#endif
 
 #define CYDL_TEMPLATE_DEFAULT_CFLAG __attribute__((__visibility__("default")))
 #endif // End CYDL_DEFINE_MACROS

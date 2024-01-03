@@ -234,13 +234,10 @@ message("src files: ${SRC_FILES}")
 
 include_directories(include)
 include_directories(${CMAKE_SOURCE_DIR}/src)
-include_directories(vendor/src/xtl/include)
-include_directories(vendor/src/xtensor/include)
-include_directories(vendor/src)
+
 include_directories(src/Core/utils)
 
 
-add_subdirectory(vendor/src/xtensor)
 
 add_executable(cynthia Sandbox/src/main.cpp ${SRC_FILES})
 target_precompile_headers(cynthia PUBLIC src/Core/utils/Macros.h)

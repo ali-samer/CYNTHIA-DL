@@ -2,60 +2,59 @@
 
 #include "../IncludeUtils.h"
 #include "../Utils.h"
-#include "Core/utils/Macros.h"
 
-namespace cydl::details
-{
-	template <
-		typename Target ,
-		size_t LocTarget , size_t NumOfScannedTs ,
-		typename ProcessedTs ,
-		typename... RemainingTs
-	>
-	struct NewTuple_;
+CYDL_BEGIN_LIB_NAMESPACE
+	CYDL_BEGIN_LIB_DETAILS_NAMESPACE
 
-	template <
-		typename Target ,
-		size_t LocTarget , size_t NumOfScannedTs ,
-		template < typename... > class TypeContainer ,
-		typename... ModifiedTypes , typename CurrentT ,
-		typename... RemainingTs
-	>
-	struct NewTuple_<
-		Target , LocTarget , NumOfScannedTs ,
-		TypeContainer< ModifiedTypes... > , CurrentT ,
-		RemainingTs...
-	> CYDL_FINAL
-	{
-		using type = typename NewTuple_<
-			Target , LocTarget , NumOfScannedTs + 1 ,
-			TypeContainer< ModifiedTypes... , CurrentT > , RemainingTs...
-		>::type;
-	};
+		template <
+			typename Target ,
+			size_t LocTarget , size_t NumOfScannedTs ,
+			typename ProcessedTs ,
+			typename... RemainingTs
+		>
+		struct NewTuple_;
 
-	template <
-		typename Target , size_t LocTarget ,
-		template < typename... > class TypeContainer ,
-		typename... ModifiedTypes , typename CurrentT ,
-		typename... RemainingTs
-	>
-	struct NewTuple_<
-		Target, LocTarget, LocTarget, TypeContainer<ModifiedTypes...>,
-		CurrentT, RemainingTs...
-	> CYDL_FINAL
-	{
-		using type = TypeContainer<ModifiedTypes..., Target, RemainingTs...>;
-	};
-}
+		template <
+			typename Target ,
+			size_t LocTarget , size_t NumOfScannedTs ,
+			template < typename... > class TypeContainer ,
+			typename... ModifiedTypes , typename CurrentT ,
+			typename... RemainingTs
+		>
+		struct NewTuple_<
+			Target , LocTarget , NumOfScannedTs ,
+			TypeContainer< ModifiedTypes... > , CurrentT ,
+			RemainingTs...
+		> CYDL_FINAL
+		{
+			using type = typename NewTuple_<
+				Target , LocTarget , NumOfScannedTs + 1 ,
+				TypeContainer< ModifiedTypes... , CurrentT > , RemainingTs...
+			>::type;
+		};
 
-namespace cydl
-{
+		template <
+			typename Target , size_t LocTarget ,
+			template < typename... > class TypeContainer ,
+			typename... ModifiedTypes , typename CurrentT ,
+			typename... RemainingTs
+		>
+		struct NewTuple_<
+			Target, LocTarget, LocTarget, TypeContainer<ModifiedTypes...>,
+			CurrentT, RemainingTs...
+		> CYDL_FINAL
+		{
+			using type = TypeContainer<ModifiedTypes..., Target, RemainingTs...>;
+		};
+
+	CYDL_END_LIB_DETAILS_NAMESPACE
+
 	template <
 	    typename Target, size_t KeyPos,
 		typename TypeContainer,
 		typename... RemainingTs
     >
-	using Tuple_t = typename details::NewTuple_<
+	using Tuple_t = typename CYDL_VDETAILS::NewTuple_<
 	        Target, KeyPos, 0, TypeContainer, RemainingTs...
 	    >::type;
 
@@ -64,7 +63,8 @@ namespace cydl
 		typename TypeContainer,
 		typename... RemainingTs
 	>
-	 using Tuple = details::NewTuple_<
+	 using Tuple = CYDL_VDETAILS::NewTuple_<
 		Target, KeyPos, 0, TypeContainer, RemainingTs...
 	>;
-}
+
+CYDL_END_LIB_NAMESPACE

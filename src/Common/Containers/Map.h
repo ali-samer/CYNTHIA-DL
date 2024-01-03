@@ -32,7 +32,6 @@
 #include "../IncludeUtils.h"
 #include "../Utils.h"
 #include "Tuple.h"
-#include "Macros.h"
 
 /**
  * The choice of conveying the namespace as "details" is an attempt to follow common C++ conventions

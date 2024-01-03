@@ -1,9 +1,6 @@
 #pragma once
 
 
-#include "Core/utils/Macros.h"
-
-
 CYDL_BEGIN_LIB_NAMESPACE
 
 		struct CYDL_TEMPLATE_DEFAULT_CFLAG CategoryTags CYDL_FINAL

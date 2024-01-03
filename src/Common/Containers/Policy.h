@@ -1,7 +1,7 @@
 #pragma once
 
-namespace cydl::details
-{
+CYDL_BEGIN_LIB_NAMESPACE
+	CYDL_BEGIN_LIB_POLICIES_NAMESPACE
 	template < typename... Policies >
 	class PolicyContainer;
 
@@ -22,5 +22,5 @@ namespace cydl::details
 
 	template < typename Layer, typename... T >
 	constexpr static bool IsSubPolicyContainer< SubPolicyContainer< Layer, T... > > = true;
-
-}
+	CYDL_END_LIB_POLICIES_NAMESPACE
+CYDL_END_LIB_NAMESPACE
