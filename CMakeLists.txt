@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.16.0)
 
 # Here, a project declaration is made with the name "Cynthia-DL" and version "0.1.0".
 # CMake will use this to create variables <PROJECT-NAME>_SOURCE_DIR, <PROJECT-NAME>_BINARY_DIR, and others. Additionally, project-specific build properties can be set.
-project(Cynthia-DL VERSION 0.1.0 )
+project("Cynthia-DL" VERSION 0.1.0 )
 
 
 set(CMAKE_CXX_STANDARD 23)
@@ -237,7 +237,10 @@ include_directories(${CMAKE_SOURCE_DIR}/src)
 
 include_directories(src/Core/utils)
 
+list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/cmake")
 
+add_subdirectory(src)
+add_subdirectory(doc)
 
 add_executable(cynthia Sandbox/src/main.cpp ${SRC_FILES})
 target_precompile_headers(cynthia PUBLIC src/Core/utils/Macros.h)
