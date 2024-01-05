@@ -10,8 +10,7 @@ CYDL_BEGIN_LIB_NAMESPACE
 	CYDL_BEGIN_LIB_DETAILS_NAMESPACE
 		template < typename Device, template < typename > class AllocPolicy >
 		struct CYDL_TEMPLATE_DEFAULT_CFLAG Allocator_ CYDL_FINAL
-		{
-		};
+		{};
 
 		/// \CPU Specialization for CPU allocator
 		template < template < typename > class AllocPolicy >

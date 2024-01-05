@@ -1,5 +1,7 @@
 #pragma once
 
+// TODO: memory pool template class is a "rough draft". Finish implementing API
+
 CYDL_BEGIN_LIB_NAMESPACE
 
 		CYDL_BEGIN_LIB_DETAILS_NAMESPACE
@@ -22,7 +24,7 @@ CYDL_BEGIN_LIB_NAMESPACE
 				for ( nextPtr = next ; nextPtr != NULL ; nextPtr = next )
 				{
 					next = next->next;
-					delete[] nextPtr;
+					delete[] nextPtr; // TODO: this is temp. Must use `AllocPolicy` to specify de-allocation of memory
 				}
 			}
 

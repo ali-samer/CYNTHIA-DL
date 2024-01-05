@@ -135,6 +135,30 @@
 #   define CYDL_ARCH_UNKNOWN 1
 #endif
 
+#if __cplusplus >= 202002L
+#define CYDL_CPP20_SUPPORTED 1
+#else
+#define CYDL_CPP20_SUPPORTED 0
+#endif
+
+#if CYDL_CPP20_SUPPORTED
+#define CYDL_MODULE_SUPPORT 1
+#else
+#define CYDL_MODULE_SUPPORT 0
+#endif
+
+#if CYDL_MODULE_SUPPORT
+#   define CYDL_IMPORT_MODULE(module_name) import module_name
+#else
+#   define CYDL_IMPORT_MODULE(module_name) #include <module_name.h>
+#endif
+
+#if CYDL_MODULE_EXPORT_SUPPORT
+#   define CYDL_EXPORT_MODULE(module_name) export module module_name;
+#else
+#   define CYDL_EXPORT_MODULE(module_name)
+#endif
+
 
 #include <cstdint>
 #include <cstdio>

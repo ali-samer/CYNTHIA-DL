@@ -11,8 +11,8 @@
 #include <functional>
 
 
-namespace cydl::utils
-{
+CYDL_BEGIN_LIB_NAMESPACE
+	CYDL_BEGIN_LIB_UTILS_NAMESPACE
 
 	template < class Fun >
 	class [[maybe_unused]] SelfCallable
@@ -79,4 +79,6 @@ namespace cydl::utils
 
 	template < typename T >
 	using RemoveConstRef_t = typename RemoveConstRef< T >::type;
-}
+
+	CYDL_END_LIB_UTILS_NAMESPACE
+CYDL_END_LIB_NAMESPACE

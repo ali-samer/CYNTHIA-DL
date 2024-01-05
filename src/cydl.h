@@ -16,3 +16,4 @@
 
 #include "Common/Allocator.h"
 #include "Common/MemoryPool.h"
+#include "Common/ContinuousMemory.h"
