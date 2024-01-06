@@ -17,3 +17,6 @@
 #include "Common/Allocator.h"
 #include "Common/MemoryPool.h"
 #include "Common/ContinuousMemory.h"
+#include "Common/LowerLevel.h"
+#include "Common/Matrix.h"
+#include "Common/PrincipalType.h"

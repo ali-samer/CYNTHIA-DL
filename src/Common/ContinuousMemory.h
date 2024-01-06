@@ -1,6 +1,5 @@
 #pragma once
 
-export module mymodule ;
 #include <memory>
 #include <unistd.h>
 
@@ -42,7 +41,7 @@ CYDL_BEGIN_LIB_NAMESPACE
 
 					CYDL_FORCE_INLINE CYDL_SIZET useCount ( ) { return m_memory.use_count( ); }
 
-				}; _SC_THREAD_PRIORITY_SCHEDULING
+				};
 
 		CYDL_END_LIB_DETAILS_NAMESPACE
 
