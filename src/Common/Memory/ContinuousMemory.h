@@ -11,6 +11,7 @@ CYDL_BEGIN_LIB_NAMESPACE
 				template < typename Elem , typename Device >
 				class CYDL_TEMPLATE_DEFAULT_CFLAG ContinuousMemory CYDL_FINAL
 				{
+				private:
 					static_assert( std::is_same< CYDL_VUTILS::RemoveConstRef_t< Elem > , Elem >::value );
 
 					using Element_t = Elem;

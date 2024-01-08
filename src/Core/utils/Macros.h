@@ -29,7 +29,7 @@
 
 // valid macros since C++98
 #define CYDL_STRONG_INLINE inline
-#define CYDL_FORCE_INLINE __attribute__((always_inline)) inline
+#define CYDL_FORCE_INLINE __attribute__((always_inline)) inline // this will force the compiler to `inline`
 #define CYDL_STRONG_EXPLICIT explicit
 
 // Compiler detection
@@ -148,7 +148,7 @@
 #endif
 
 #if CYDL_MODULE_SUPPORT
-#   define CYDL_IMPORT_MODULE(module_name) import module_name
+#   define CYDL_IMPORT_MODULE( module_name ) import module_name
 #else
 #   define CYDL_IMPORT_MODULE(module_name) #include <module_name.h>
 #endif
@@ -156,7 +156,7 @@
 #if CYDL_MODULE_EXPORT_SUPPORT
 #   define CYDL_EXPORT_MODULE(module_name) export module module_name;
 #else
-#   define CYDL_EXPORT_MODULE(module_name)
+#   define CYDL_EXPORT_MODULE( module_name )
 #endif
 
 
@@ -194,12 +194,12 @@ typedef float CYDL_FLOAT32;
 
 #elif defined(CYDL_ARCH_ARM64) || defined(CYDL_ARCH_AARCH64)
 typedef long long CYDL_INT64;
-typedef int CYDL_INT32;
-typedef short CYDL_INT16;
-typedef char CYDL_INT8;
+typedef int       CYDL_INT32;
+typedef short     CYDL_INT16;
+typedef char      CYDL_INT8;
 
 typedef double CYDL_FLOAT64;
-typedef float CYDL_FLOAT32;
+typedef float  CYDL_FLOAT32;
 
 #elif defined(CYDL_ARCH_ARM32) || defined(CYDL_ARCH_ARM)
 typedef long long CYDL_INT64;
@@ -251,7 +251,7 @@ typedef float CYDL_FLOAT32;
 #define CYDL_RETURN_ON_FAIL( expr ) do { if (!(expr)) return 0; } while (0)
 #define CYDL_CONCAT( X , Y ) X##Y
 #define CYDL_CONCAT_3( X , Y , Z ) X##Y##Z
-#define CYDL_CONCAT_WITH_DELIMITER( X , _CYDL_DELIMITER , Z ) CYDL_CONCAT_3(X, _CYDL_DELIMITER, Z)
+#define CYDL_CONCAT_WITH_DELIMITER( X , _CYDL_DELIMITER_PARAM , Z ) CYDL_CONCAT_3(X, _CYDL_DELIMITER_PARAM, Z)
 #define CYDL_DEFAULT_DELIMITER _
 #ifndef CYDL_VERSIONING
 #   define CYDL_VERSIONING 1

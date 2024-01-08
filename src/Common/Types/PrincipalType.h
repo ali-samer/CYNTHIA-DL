@@ -13,6 +13,18 @@ CYDL_BEGIN_LIB_NAMESPACE
 			using type = Matrix<T, Device>;
 		};
 
+		template < typename T, typename Device >
+		struct CYDL_TEMPLATE_DEFAULT_CFLAG PrincipleType_< CategoryTags::Scalar, T, Device>
+		{
+			using type = Scalar<T, Device>;
+		};
+
+		template < typename T, typename Device >
+		struct CYDL_TEMPLATE_DEFAULT_CFLAG PrincipleType_< CategoryTags::Vector, T, Device>
+		{
+			using type = Vector<T, Device>;
+		};
+
 		// TODO: implement further specializations
 
 	CYDL_END_LIB_DETAILS_NAMESPACE

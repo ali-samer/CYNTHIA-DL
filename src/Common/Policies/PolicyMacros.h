@@ -1,4 +1,4 @@
-#include "Common/TypeTraits.h"
+#include "Common/Utils/TypeTraits.h"
 
 
 #define CYDL_ENUM_TYPE_POLICY_OBJECT(PolicyName, Major, Minor, Value) \
