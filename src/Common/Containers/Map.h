@@ -142,7 +142,7 @@ CYDL_BEGIN_LIB_NAMESPACE
 // to ensure flexibility the use of variadic templates is essential to both
 // template classes to set key-valued pairs
 	template < typename... Keys > // keys will be saved in Keys
-	class Map CYDL_FINAL
+	class CYDL_TEMPLATE_DEFAULT_CFLAG Map CYDL_FINAL
 	{
 		template < typename... Vals > // Valued pairs will be saved in Vals in parallel with Keys
 		struct Value

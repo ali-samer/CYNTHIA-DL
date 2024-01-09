@@ -16,24 +16,25 @@ CYDL_BEGIN_LIB_NAMESPACE
 			// does not pass
 			CYDL_STRONG_EXPLICIT Scalar ( ElementType value = ElementType( ) ) : m_value( value ) { }
 
-			auto CYDL_FORCE_INLINE value ( ) { return m_value; }
+			CYDL_FORCE_INLINE auto value ( ) { return m_value; }
 
 			/// \Overloads
-			bool operator== ( const Scalar & scalar ) const
+			CYDL_FORCE_INLINE bool operator== ( const Scalar & scalar ) const
 			{
-
+				return m_value == scalar.m_value;
 			}
 
 			template < class OtherType >
-			bool operator== ( const OtherType & ) const
+			CYDL_STRONG_INLINE bool operator== ( const OtherType & ) const
 			{
-
+				CYDL_WARNING( "`Scalar` computing type must be compared with its equivalent computing type" );
+				return false;
 			}
 
 			template < typename Data >
-			bool operator!= ( const Data & data ) const
+			CYDL_FORCE_INLINE bool operator!= ( const Data & data ) const
 			{
-
+				return true;
 			}
 
 			auto evalRegister ( ) const

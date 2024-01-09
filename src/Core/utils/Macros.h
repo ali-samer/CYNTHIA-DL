@@ -12,26 +12,6 @@
                                       (CYDL_MINOR_VERSION>y || (CYDL_MINOR_VERSION>=y && \
                                                                  CYDL_PATCH_VERSION>=z))))
 
-// C++ feature support
-#if __cplusplus >= 201103L
-#   define CYDL_NOEXCEPT noexcept
-#   define CYDL_CONSTEXPR constexpr
-#   define CYDL_NULLPTR nullptr
-#   define CYDL_OVERRIDE override
-#   define CYDL_FINAL final
-#else
-#   define CYDL_NOEXCEPT throw()
-#   define CYDL_CONSTEXPR
-#   define CYDL_NULLPTR 0
-#   define CYDL_OVERRIDE
-#   define CYDL_FINAL
-#endif
-
-// valid macros since C++98
-#define CYDL_STRONG_INLINE inline
-#define CYDL_FORCE_INLINE __attribute__((always_inline)) inline // this will force the compiler to `inline`
-#define CYDL_STRONG_EXPLICIT explicit
-
 // Compiler detection
 #ifdef __GNUC__
 #   define CYDL_COMP_GNUC (__GNUC__*10 + __GNUC_MINOR__)
@@ -135,16 +115,44 @@
 #   define CYDL_ARCH_UNKNOWN 1
 #endif
 
-#if __cplusplus >= 202002L
-#define CYDL_CPP20_SUPPORTED 1
+
+// C++ feature support
+#if __cplusplus >= 201103L
+#   define CYDL_NOEXCEPT noexcept
+#   define CYDL_CONSTEXPR constexpr
+#   define CYDL_NULLPTR nullptr
+#   define CYDL_OVERRIDE override
+#   define CYDL_FINAL final
 #else
-#define CYDL_CPP20_SUPPORTED 0
+#   define CYDL_NOEXCEPT throw()
+#   define CYDL_CONSTEXPR
+#   define CYDL_NULLPTR 0
+#   define CYDL_OVERRIDE
+#   define CYDL_FINAL
+#endif
+
+// valid macros since C++98
+#define CYDL_STRONG_INLINE inline
+#   if defined(CYDL_COMP_GNUC) || defined(CYDL_COMP_CLANG) || defined(CYDL_COMP_ICC)
+#       define CYDL_FORCE_INLINE __attribute__((always_inline)) inline // this will force the compiler to `inline`
+#   elif defined(CYDL_COMP_MSVC)
+#       define CYDL_FORCE_INLINE __forceinline
+#   else
+#       define CYDL_FORCE_INLINE CYDL_STRONG_INLINE
+#   endif
+#define CYDL_STRONG_EXPLICIT explicit
+
+
+#if __cplusplus >= 202002L
+#   define CYDL_CPP20_SUPPORTED 1
+#else
+#   define CYDL_CPP20_SUPPORTED 0
 #endif
 
 #if CYDL_CPP20_SUPPORTED
-#define CYDL_MODULE_SUPPORT 1
+#   define CYDL_MODULE_SUPPORT 1
 #else
-#define CYDL_MODULE_SUPPORT 0
+#d  efine CYDL_MODULE_SUPPORT 0
 #endif
 
 #if CYDL_MODULE_SUPPORT
@@ -168,83 +176,83 @@
 // Define CYDL_MAX_SIZE based on the identified architecture
 #if defined(CYDL_ARCH_X86_64) || defined(CYDL_ARCH_ARM64) || defined(CYDL_ARCH_MS_X64) || \
     defined(CYDL_ARCH_PPC64) || defined(CYDL_ARCH_SPARC64) || defined(CYDL_ARCH_MIPS64)
-#define CYDL_MAX_SIZE SIZE_MAX
+#   define CYDL_MAX_SIZE SIZE_MAX
 #else
-#define CYDL_MAX_SIZE UINT32_MAX
+#   define CYDL_MAX_SIZE UINT32_MAX
 #endif
-typedef std::size_t CYDL_SIZET;
+	typedef std::size_t CYDL_SIZET;
 
 #ifdef CYDL_ARCH_X86_64
-typedef long long CYDL_INT64;
-typedef int CYDL_INT32;
-typedef short CYDL_INT16;
-typedef char CYDL_INT8;
+	typedef long long CYDL_INT64;
+	typedef int CYDL_INT32;
+	typedef short CYDL_INT16;
+	typedef char CYDL_INT8;
 
-typedef double CYDL_FLOAT64;
-typedef float CYDL_FLOAT32;
+	typedef double CYDL_FLOAT64;
+	typedef float CYDL_FLOAT32;
 
 #elif defined(CYDL_ARCH_X86_32) || defined(CYDL_ARCH_MS_X64) || defined(CYDL_ARCH_MS_X86)
-typedef long long CYDL_INT64;
-typedef int CYDL_INT32;
-typedef short CYDL_INT16;
-typedef char CYDL_INT8;
+	typedef long long CYDL_INT64;
+	typedef int CYDL_INT32;
+	typedef short CYDL_INT16;
+	typedef char CYDL_INT8;
 
-typedef double CYDL_FLOAT64;
-typedef float CYDL_FLOAT32;
+	typedef double CYDL_FLOAT64;
+	typedef float CYDL_FLOAT32;
 
 #elif defined(CYDL_ARCH_ARM64) || defined(CYDL_ARCH_AARCH64)
-typedef long long CYDL_INT64;
-typedef int       CYDL_INT32;
-typedef short     CYDL_INT16;
-typedef char      CYDL_INT8;
+	typedef long long CYDL_INT64;
+	typedef int       CYDL_INT32;
+	typedef short     CYDL_INT16;
+	typedef char      CYDL_INT8;
 
-typedef double CYDL_FLOAT64;
-typedef float  CYDL_FLOAT32;
+	typedef double CYDL_FLOAT64;
+	typedef float  CYDL_FLOAT32;
 
 #elif defined(CYDL_ARCH_ARM32) || defined(CYDL_ARCH_ARM)
-typedef long long CYDL_INT64;
-typedef int CYDL_INT32;
-typedef short CYDL_INT16;
-typedef char CYDL_INT8;
+	typedef long long CYDL_INT64;
+	typedef int CYDL_INT32;
+	typedef short CYDL_INT16;
+	typedef char CYDL_INT8;
 
-typedef double CYDL_FLOAT64;
-typedef float CYDL_FLOAT32;
+	typedef double CYDL_FLOAT64;
+	typedef float CYDL_FLOAT32;
 
-#elif defined(CYDL_ARCH_PPC64) || defined(CYDL_ARCH_PPC32)
-typedef long long CYDL_INT64;
-typedef int CYDL_INT32;
-typedef short CYDL_INT16;
-typedef char CYDL_INT8;
+	#elif defined(CYDL_ARCH_PPC64) || defined(CYDL_ARCH_PPC32)
+	typedef long long CYDL_INT64;
+	typedef int CYDL_INT32;
+	typedef short CYDL_INT16;
+	typedef char CYDL_INT8;
 
-typedef double CYDL_FLOAT64;
-typedef float CYDL_FLOAT32;
+	typedef double CYDL_FLOAT64;
+	typedef float CYDL_FLOAT32;
 
 #elif defined(CYDL_ARCH_SPARC64) || defined(CYDL_ARCH_SPARC32)
-typedef long CYDL_INT64;
-typedef int CYDL_INT32;
-typedef short CYDL_INT16;
-typedef char CYDL_INT8;
+	typedef long CYDL_INT64;
+	typedef int CYDL_INT32;
+	typedef short CYDL_INT16;
+	typedef char CYDL_INT8;
 
-typedef double CYDL_FLOAT64;
-typedef float CYDL_FLOAT32;
+	typedef double CYDL_FLOAT64;
+	typedef float CYDL_FLOAT32;
 
 #elif defined(CYDL_ARCH_MIPS64) || defined(CYDL_ARCH_MIPS32)
-typedef long long CYDL_INT64;
-typedef int CYDL_INT32;
-typedef short CYDL_INT16;
-typedef char CYDL_INT8;
+	typedef long long CYDL_INT64;
+	typedef int CYDL_INT32;
+	typedef short CYDL_INT16;
+	typedef char CYDL_INT8;
 
-typedef double CYDL_FLOAT64;
-typedef float CYDL_FLOAT32;
+	typedef double CYDL_FLOAT64;
+	typedef float CYDL_FLOAT32;
 
 #else // Unknown architecture
-typedef long long CYDL_INT64;
-typedef int CYDL_INT32;
-typedef short CYDL_INT16;
-typedef char CYDL_INT8;
+	typedef long long CYDL_INT64;
+	typedef int CYDL_INT32;
+	typedef short CYDL_INT16;
+	typedef char CYDL_INT8;
 
-typedef double CYDL_FLOAT64;
-typedef float CYDL_FLOAT32;
+	typedef double CYDL_FLOAT64;
+	typedef float CYDL_FLOAT32;
 
 #endif
 
@@ -282,10 +290,12 @@ typedef float CYDL_FLOAT32;
 #define CYDL_VPOLICIES cydl::policies::CYDL_VERSIONING_NAMESPACE
 #define CYDL_VUTILS cydl::utils::CYDL_VERSIONING_NAMESPACE
 
-#define CYDL_DEFAULT_ALLOCATION_SPACE 500
-#define CYDL_DEFAULT_EXPANSION_SPACE 100
+// TODO: these allocation sizes/spaces are temporary. Make sure to find appropriate default
+//  allocation space that would be ideal across other systems
+#define CYDL_DEFAULT_ALLOCATION_SPACE 500 /* Must change */
+#define CYDL_DEFAULT_EXPANSION_SPACE 100 /* Must change */
 
-/// \MEMORY_INITIALIZATION \a cydl memory pool initial size could be set by user upon compilation
+/// \MEMORY_INITIALIZATION \a cydl memory pool initial size could be set by user before compilation
 #ifndef CYDL_MEMORY_POOL_SIZE
 	#define CYDL_MEMORY_POOL_SIZE CYDL_DEFAULT_ALLOCATION_SPACE
 #endif
@@ -296,4 +306,18 @@ typedef float CYDL_FLOAT32;
 #endif
 
 #define CYDL_TEMPLATE_DEFAULT_CFLAG __attribute__((__visibility__("default")))
+#define CYDL_TEMPLATE_HIDDEN_CFLAG __attribute__((__visibility__("hidden")))
+#define CYDL_TEMPLATE_PROTECTED_CFLAG __attribute__((__visibility__("protected")))
+#define CYDL_TEMPLATE_INTERNAL_CFLAG __attribute__((__visibility__("internal")))
+
+#if defined(CYDL_COMP_CLANG) && defined(CYDL_COMP_GNUC)
+	#define DO_PRAGMA(x) _Pragma(#x)
+	#define CYDL_WARNING(x) DO_PRAGMA(GCC warning x)
+#elif defined(_MSC_VER)
+#define CYDL_WARNING(x) __pragma(message(x))
+#else
+    #define CYDL_WARNING(x) /* Other compilers */
+#endif
+
+
 #endif // End CYDL_DEFINE_MACROS
