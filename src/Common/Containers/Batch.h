@@ -28,6 +28,7 @@ CYDL_BEGIN_LIB_NAMESPACE
 			CYDL_FORCE_INLINE bool availableForWrite() const CYDL_NOEXCEPT { m_memory.useCount() == 1; }
 			CYDL_STRONG_INLINE void setValue(CYDL_SIZET p_batchID, CYDL_SIZET p_rowID, CYDL_SIZET p_colID, ElementType val)
 			{
+
 			}
 
 			const auto operator[] (CYDL_SIZET p_batchID) const CYDL_NOEXCEPT
