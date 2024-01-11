@@ -17,7 +17,7 @@ CYDL_BEGIN_LIB_NAMESPACE
 		CYDL_BEGIN_LIB_DETAILS_NAMESPACE
 
 				template < typename T >
-				struct CYDL_TEMPLATE_DEFAULT_CFLAG LowerAccessImpl; // TODO: to be implemented
+				struct CYDL_DEFAULT_AFLAG LowerAccessImpl; // TODO: to be implemented
 
 				/**
 				 * LowerAccess function should only be accessed by the internal mechanism of the framework

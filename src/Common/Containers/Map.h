@@ -44,169 +44,169 @@
 
 CYDL_BEGIN_LIB_NAMESPACE
 
-	CYDL_BEGIN_LIB_DETAILS_NAMESPACE
+CYDL_BEGIN_LIB_DETAILS_NAMESPACE
 // InitContainer: Initializes a type container with a specified number of types.
 // If the number of provided types is less than NumOfTypeParams, it pads the container with NullParam.
 
 // Recursive case: Pad the container until the number of types reaches NumOfTypeParams.
-		template <
-			size_t NumOfTypeParams ,
-			template < typename... > class TypeContainer , typename... Pack
-		>
-		struct InitContainer
-		{
-			static_assert( NumOfTypeParams , "You must specify <typename... keys> to set "
-			                                 "key-valued pairs to their corresponding identifiers." );
-			using type = typename InitContainer< NumOfTypeParams - 1 , TypeContainer , NullParam , Pack... >::type;
-		};
+template <
+	size_t NumOfTypeParams ,
+	template < typename... > class TypeContainer , typename... Pack
+>
+struct InitContainer
+{
+	static_assert( NumOfTypeParams , "You must specify <typename... keys> to set "
+	                                 "key-valued pairs to their corresponding identifiers." );
+	using type = typename InitContainer< NumOfTypeParams - 1 , TypeContainer , NullParam , Pack... >::type;
+};
 
-	// Base case: When NumOfTypeParams reaches 0, stop padding and define the container type.
-		template < template < typename... > class TypeContainer , typename... Pack >
-		struct InitContainer< 0 , TypeContainer , Pack... >
-		{
-			using type = TypeContainer< Pack... >;
-		};
+// Base case: When NumOfTypeParams reaches 0, stop padding and define the container type.
+template < template < typename... > class TypeContainer , typename... Pack >
+struct InitContainer< 0 , TypeContainer , Pack... >
+{
+	using type = TypeContainer< Pack... >;
+};
 
-	// Contains: Checks if a type T is present in a list of types Types...
-		template < typename T , typename... Types >
-		struct Contains_;
+// Contains: Checks if a type T is present in a list of types Types...
+template < typename T , typename... Types >
+struct Contains_;
 
-	// Base case: Type T is not found in the list.
-		template < typename T >
-		struct Contains_< T > : std::false_type
-		{
-		};
+// Base case: Type T is not found in the list.
+template < typename T >
+struct Contains_< T > : std::false_type
+{
+};
 
-	// Match found case: Type T matches the first type in the list.
-		template < typename T , typename... Types >
-		struct Contains_< T , T , Types... > : std::true_type
-		{
-		};
+// Match found case: Type T matches the first type in the list.
+template < typename T , typename... Types >
+struct Contains_< T , T , Types... > : std::true_type
+{
+};
 
-	// Recursive case: Type T does not match the first type in the list, continue searching.
-		template < typename T , typename MissMatch , typename... Types >
-		struct Contains_< T , MissMatch , Types... > : Contains_< T , Types... >
-		{
-		};
+// Recursive case: Type T does not match the first type in the list, continue searching.
+template < typename T , typename MissMatch , typename... Types >
+struct Contains_< T , MissMatch , Types... > : Contains_< T , Types... >
+{
+};
 
-		template < typename Target , typename... RemainingTs >
-		using Contains = Contains_< Target , RemainingTs... >;
+template < typename Target , typename... RemainingTs >
+using Contains = Contains_< Target , RemainingTs... >;
 
-	// IndexOf: Returns index of a type if a type Target is present in a list of types RemainingTs...
-		template < typename Target , typename... RemainingTs >
-		struct IndexOf_;
+// IndexOf: Returns index of a type if a type Target is present in a list of types RemainingTs...
+template < typename Target , typename... RemainingTs >
+struct IndexOf_;
 
-	// Base case: Target not found
-		template < typename Target >
-		struct IndexOf_< Target >
-		{
-			static CYDL_CONSTEXPR size_t value = std::numeric_limits< size_t >::max( );
-		};
+// Base case: Target not found
+template < typename Target >
+struct IndexOf_< Target >
+{
+	static CYDL_CONSTEXPR size_t value = std::numeric_limits< size_t >::max( );
+};
 
-	// Recursive case: Target not matched, continue searching
-		template < typename Target , typename MissMatch , typename... RemainingTs >
-		struct IndexOf_< Target , MissMatch , RemainingTs... >
-		{
-			static CYDL_CONSTEXPR size_t value = 1 + IndexOf_< Target , RemainingTs... >::value;
-		};
+// Recursive case: Target not matched, continue searching
+template < typename Target , typename MissMatch , typename... RemainingTs >
+struct IndexOf_< Target , MissMatch , RemainingTs... >
+{
+	static CYDL_CONSTEXPR size_t value = 1 + IndexOf_< Target , RemainingTs... >::value;
+};
 
-	// Match found case: Target matched, return current index
-		template < typename Target , typename... RemainingTs >
-		struct IndexOf_< Target , Target , RemainingTs... >
-		{
-			static CYDL_CONSTEXPR size_t value = 0;
-		};
+// Match found case: Target matched, return current index
+template < typename Target , typename... RemainingTs >
+struct IndexOf_< Target , Target , RemainingTs... >
+{
+	static CYDL_CONSTEXPR size_t value = 0;
+};
 
-	// Alias template for user convenience
-		template < typename Target , typename... RemainingTs >
-		using IndexOf = IndexOf_< Target , RemainingTs... >;
+// Alias template for user convenience
+template < typename Target , typename... RemainingTs >
+using IndexOf = IndexOf_< Target , RemainingTs... >;
 
-		template < size_t Index , typename... Ts >
-		struct GetElementByIndex;
+template < size_t Index , typename... Ts >
+struct GetElementByIndex;
 
-		template < typename T , typename... Ts >
-		struct GetElementByIndex< 0 , T , Ts... >
-		{
-			using type = T;
-		};
+template < typename T , typename... Ts >
+struct GetElementByIndex< 0 , T , Ts... >
+{
+	using type = T;
+};
 
-		template < size_t Index , typename... Ts >
-		struct GetElementByIndex
-		{
-			static_assert( Index >= 0 && "Illegal use of template function. Index must be >= 0" );
-			using type = typename GetElementByIndex< Index - 1 , Ts... >::type;
-		};
-	CYDL_END_LIB_DETAILS_NAMESPACE
+template < size_t Index , typename... Ts >
+struct GetElementByIndex
+{
+	static_assert( Index >= 0 && "Illegal use of template function. Index must be >= 0" );
+	using type = typename GetElementByIndex< Index - 1 , Ts... >::type;
+};
+CYDL_END_LIB_DETAILS_NAMESPACE
 
 
 // to ensure flexibility the use of variadic templates is essential to both
 // template classes to set key-valued pairs
-	template < typename... Keys > // keys will be saved in Keys
-	class CYDL_TEMPLATE_DEFAULT_CFLAG Map CYDL_FINAL
+template < typename... Keys > // keys will be saved in Keys
+class CYDL_DEFAULT_AFLAG Map CYDL_FINAL
+{
+	template < typename... Vals > // Valued pairs will be saved in Vals in parallel with Keys
+	struct Value
 	{
-		template < typename... Vals > // Valued pairs will be saved in Vals in parallel with Keys
-		struct Value
-		{
-		public:
-			using TupleType = typename details::InitContainer< sizeof...( Vals ) , std::tuple >::Type;
-
-			Value ( ) = default;
-
-			CYDL_STRONG_EXPLICIT Value ( std::shared_ptr< void >(&& input)[sizeof... ( Vals )] )
-			{
-				for ( size_t i = 0 ; i < sizeof... ( Vals ) ; i++ )
-					m_tuple[ i ] = std::move( input[ i ] );
-			}
-
-			template < typename Key , typename Val >
-			CYDL_CONSTEXPR auto Set ( Val && val ) &&
-			{
-				using namespace details;
-				CYDL_CONSTEXPR size_t TagPos = IndexOf< Key , Keys... >::value;
-
-				using rawVal = std::decay_t< Val >;
-				rawVal* tmp = new rawVal( std::forward< Val >( val ) ); // NOLINT(*-use-auto)
-
-				m_tuple[ TagPos ] = std::shared_ptr< void >( tmp ,
-				                                             [ ] ( void* ptr )
-				                                             {
-				                                               rawVal* nptr = static_cast<rawVal*>(ptr);
-				                                               delete nptr;
-				                                             } );
-
-				using new_type = Tuple_t< rawVal , TagPos , Value< > , Vals... >;
-				return new_type( std::move( m_tuple ) );
-			}
-
-			template < typename Key >
-			CYDL_CONSTEXPR CYDL_STRONG_INLINE auto & Get ( ) const
-			{
-				CYDL_CONSTEXPR size_t TagPos = details::IndexOf< Key , Keys... >::value;
-				if CYDL_CONSTEXPR ( TagPos == std::numeric_limits< std::decay_t< decltype( TagPos ) > >::max( ) )
-				{
-					std::decay_t< decltype( GetHelper< Key >( ) ) > defaultObject { };
-					return defaultObject;
-				}
-
-				auto ptr = std::static_pointer_cast< std::decay_t< decltype( GetHelper< Key >( ) )>>(
-					m_tuple[ TagPos ] );
-				return *ptr;
-			}
-
-		private:
-			template < typename Key >
-			auto GetHelper ( ) -> typename CYDL_VDETAILS::GetElementByIndex< CYDL_VDETAILS::IndexOf< Key , Keys... >::value , Keys... >::type { }
-
-		private:
-			std::shared_ptr< void > m_tuple[sizeof...( Vals )];
-		};
 	public:
-		static auto Create ( )
+		using TupleType = typename details::InitContainer< sizeof...( Vals ) , std::tuple >::Type;
+
+		Value ( ) = default;
+
+		CYDL_STRONG_EXPLICIT Value ( std::shared_ptr< void >(&& input)[sizeof... ( Vals )] )
 		{
-			using type = typename CYDL_VDETAILS::InitContainer< sizeof... ( Keys ) , Value >::type;
-			return type { };
+			for ( size_t i = 0 ; i < sizeof... ( Vals ) ; i++ )
+				m_tuple[ i ] = std::move( input[ i ] );
 		}
 
+		template < typename Key , typename Val >
+		CYDL_CONSTEXPR auto Set ( Val && val ) &&
+		{
+			using namespace details;
+			CYDL_CONSTEXPR size_t TagPos = IndexOf< Key , Keys... >::value;
+
+			using rawVal = std::decay_t< Val >;
+			rawVal* tmp = new rawVal( std::forward< Val >( val ) ); // NOLINT(*-use-auto)
+
+			m_tuple[ TagPos ] = std::shared_ptr< void >( tmp ,
+			                                             [ ] ( void* ptr )
+			                                             {
+			                                               rawVal* nptr = static_cast<rawVal*>(ptr);
+			                                               delete nptr;
+			                                             } );
+
+			using new_type = Tuple_t< rawVal , TagPos , Value< > , Vals... >;
+			return new_type( std::move( m_tuple ) );
+		}
+
+		template < typename Key >
+		CYDL_CONSTEXPR CYDL_STRONG_INLINE auto & Get ( ) const
+		{
+			CYDL_CONSTEXPR size_t TagPos = details::IndexOf< Key , Keys... >::value;
+			if CYDL_CONSTEXPR ( TagPos == std::numeric_limits< std::decay_t< decltype( TagPos ) > >::max( ) )
+			{
+				std::decay_t< decltype( GetHelper< Key >( ) ) > defaultObject { };
+				return defaultObject;
+			}
+
+			auto ptr = std::static_pointer_cast< std::decay_t< decltype( GetHelper< Key >( ) )>>(
+				m_tuple[ TagPos ] );
+			return *ptr;
+		}
+
+	private:
+		template < typename Key >
+		auto GetHelper ( ) -> typename CYDL_VDETAILS::GetElementByIndex< CYDL_VDETAILS::IndexOf< Key , Keys... >::value , Keys... >::type { }
+
+	private:
+		std::shared_ptr< void > m_tuple[sizeof...( Vals )];
 	};
+public:
+	static auto Create ( )
+	{
+		using type = typename CYDL_VDETAILS::InitContainer< sizeof... ( Keys ) , Value >::type;
+		return type { };
+	}
+
+};
 CYDL_END_LIB_NAMESPACE
 

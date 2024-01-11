@@ -176,9 +176,11 @@
 #endif
 
 #ifdef CYDL_CPP17_SUPPORTED
-#   define CYDL_DONT_IGNORE_ATTRIBUTE [[nodiscard]]
+#   define CYDL_DONT_IGNORE_AFLAG [[nodiscard]]
+#   define CYDL_UNUSED_AFLAG [[maybe_unused]]
 #else
-#   define CYDL_DONT_IGNORE_ATTRIBUTE
+#   define CYDL_DONT_IGNORE_AFLAG
+#   define CYDL_UNUSED_AFLAG
 #endif
 
 #include <cstdint>
@@ -323,10 +325,10 @@ typedef float CYDL_FLOAT32;
 	#define CYDL_MEMORY_POOL_EXPANSION_SIZE CYDL_DEFAULT_EXPANSION_SPACE
 #endif
 
-#define CYDL_TEMPLATE_DEFAULT_CFLAG __attribute__((__visibility__("default")))
-#define CYDL_TEMPLATE_HIDDEN_CFLAG __attribute__((__visibility__("hidden")))
-#define CYDL_TEMPLATE_PROTECTED_CFLAG __attribute__((__visibility__("protected")))
-#define CYDL_TEMPLATE_INTERNAL_CFLAG __attribute__((__visibility__("internal")))
+#define CYDL_DEFAULT_AFLAG __attribute__((__visibility__("default")))
+#define CYDL_HIDDEN_AFLAG __attribute__((__visibility__("hidden")))
+#define CYDL_PROTECTED_AFLAG __attribute__((__visibility__("protected")))
+#define CYDL_INTERNAL_AFLAG __attribute__((__visibility__("internal")))
 
 #if defined(CYDL_COMP_CLANG) && defined(CYDL_COMP_GNUC)
 	#define DO_PRAGMA( x ) _Pragma(#x)
