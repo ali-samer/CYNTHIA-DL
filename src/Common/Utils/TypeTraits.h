@@ -80,5 +80,8 @@ CYDL_BEGIN_LIB_NAMESPACE
 	template < typename T >
 	using RemoveConstRef_t = typename RemoveConstRef< T >::type;
 
+	template < typename T >
+	concept IsClass = std::is_class<T>::value;
+
 	CYDL_END_LIB_UTILS_NAMESPACE
 CYDL_END_LIB_NAMESPACE

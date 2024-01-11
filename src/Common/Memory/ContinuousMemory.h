@@ -1,5 +1,6 @@
 #pragma once
 
+
 #include <memory>
 #include <unistd.h>
 
@@ -20,8 +21,9 @@ CYDL_BEGIN_LIB_NAMESPACE
 					Element_t* m_memoryStart;
 
 				public:
-					CYDL_STRONG_EXPLICIT ContinuousMemory ( CYDL_SIZET sizeParam )
-						: m_memory( Allocator< Device, CYDL_VPOLICIES::MallocCreator >::template Allocate< Element_t >( sizeParam ) ) ,
+					CYDL_STRONG_EXPLICIT ContinuousMemory ( CYDL_SIZET sizeParam ) // TODO: change CYDL_VPOLICIES::MallocCreator to an interface between different devices and allocations strategies
+						: m_memory( Allocator< Device , CYDL_VPOLICIES::MallocCreator >::template Allocate< Element_t >(
+						sizeParam ) ) ,
 						  m_memoryStart( m_memory.get( ) ) { }
 
 					ContinuousMemory ( std::shared_ptr< Element_t > memoryParam , Element_t* memoryStartParam )

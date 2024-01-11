@@ -46,4 +46,7 @@ CYDL_BEGIN_LIB_NAMESPACE
 			ElementType m_value;
 		};
 
+		template < typename T , typename Device >
+		CYDL_CONSTEXPR bool IsScalar< Scalar< T , Device>> = true;
+
 CYDL_END_LIB_NAMESPACE

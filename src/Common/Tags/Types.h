@@ -204,5 +204,4 @@ CYDL_BEGIN_LIB_NAMESPACE
 
 		template < typename T >
 		using DataCategory_t = typename CYDL_VDETAILS::DataCategory_< T >::type;
-
 CYDL_END_LIB_NAMESPACE

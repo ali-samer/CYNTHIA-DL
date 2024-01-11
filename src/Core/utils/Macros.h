@@ -123,6 +123,7 @@
 #   define CYDL_NULLPTR nullptr
 #   define CYDL_OVERRIDE override
 #   define CYDL_FINAL final
+#   define CYDL_CPP11_SUPPORTED 1
 #else
 #   define CYDL_NOEXCEPT throw()
 #   define CYDL_CONSTEXPR
@@ -142,6 +143,11 @@
 #   endif
 #define CYDL_STRONG_EXPLICIT explicit
 
+#if __cplusplus >= 201703L
+#   define CYDL_CPP17_SUPPORTED 1
+#else
+#   define CYDL_CPP17_SUPPORTED 0
+#endif
 
 #if __cplusplus >= 202002L
 #   define CYDL_CPP20_SUPPORTED 1
@@ -156,6 +162,8 @@
 #endif
 
 #if CYDL_MODULE_SUPPORT
+#   define CYDL_DEFINE_MODULE module;
+#   define CYDL_DECLARE_MODULE( module_name ) export module module_name;
 #   define CYDL_IMPORT_MODULE( module_name ) import module_name
 #else
 #   define CYDL_IMPORT_MODULE(module_name) #include <module_name.h>
@@ -167,6 +175,11 @@
 #   define CYDL_EXPORT_MODULE( module_name )
 #endif
 
+#ifdef CYDL_CPP17_SUPPORTED
+#   define CYDL_DONT_IGNORE_ATTRIBUTE [[nodiscard]]
+#else
+#   define CYDL_DONT_IGNORE_ATTRIBUTE
+#endif
 
 #include <cstdint>
 #include <cstdio>
@@ -180,85 +193,89 @@
 #else
 #   define CYDL_MAX_SIZE UINT32_MAX
 #endif
-	typedef std::size_t CYDL_SIZET;
+typedef std::size_t CYDL_SIZET;
 
 #ifdef CYDL_ARCH_X86_64
-	typedef long long CYDL_INT64;
-	typedef int CYDL_INT32;
-	typedef short CYDL_INT16;
-	typedef char CYDL_INT8;
+typedef long long CYDL_INT64;
+typedef int CYDL_INT32;
+typedef short CYDL_INT16;
+typedef char CYDL_INT8;
 
-	typedef double CYDL_FLOAT64;
-	typedef float CYDL_FLOAT32;
+typedef double CYDL_FLOAT64;
+typedef float CYDL_FLOAT32;
 
 #elif defined(CYDL_ARCH_X86_32) || defined(CYDL_ARCH_MS_X64) || defined(CYDL_ARCH_MS_X86)
-	typedef long long CYDL_INT64;
-	typedef int CYDL_INT32;
-	typedef short CYDL_INT16;
-	typedef char CYDL_INT8;
+typedef long long CYDL_INT64;
+typedef int CYDL_INT32;
+typedef short CYDL_INT16;
+typedef char CYDL_INT8;
 
-	typedef double CYDL_FLOAT64;
-	typedef float CYDL_FLOAT32;
+typedef double CYDL_FLOAT64;
+typedef float CYDL_FLOAT32;
 
 #elif defined(CYDL_ARCH_ARM64) || defined(CYDL_ARCH_AARCH64)
-	typedef long long CYDL_INT64;
-	typedef int       CYDL_INT32;
-	typedef short     CYDL_INT16;
-	typedef char      CYDL_INT8;
+typedef long long CYDL_INT64;
+typedef int       CYDL_INT32;
+typedef short     CYDL_INT16;
+typedef char      CYDL_INT8;
 
-	typedef double CYDL_FLOAT64;
-	typedef float  CYDL_FLOAT32;
+typedef double CYDL_FLOAT64;
+typedef float  CYDL_FLOAT32;
 
 #elif defined(CYDL_ARCH_ARM32) || defined(CYDL_ARCH_ARM)
-	typedef long long CYDL_INT64;
-	typedef int CYDL_INT32;
-	typedef short CYDL_INT16;
-	typedef char CYDL_INT8;
+typedef long long CYDL_INT64;
+typedef int CYDL_INT32;
+typedef short CYDL_INT16;
+typedef char CYDL_INT8;
 
-	typedef double CYDL_FLOAT64;
-	typedef float CYDL_FLOAT32;
+typedef double CYDL_FLOAT64;
+typedef float CYDL_FLOAT32;
 
-	#elif defined(CYDL_ARCH_PPC64) || defined(CYDL_ARCH_PPC32)
-	typedef long long CYDL_INT64;
-	typedef int CYDL_INT32;
-	typedef short CYDL_INT16;
-	typedef char CYDL_INT8;
+#elif defined(CYDL_ARCH_PPC64) || defined(CYDL_ARCH_PPC32)
+typedef long long CYDL_INT64;
+typedef int CYDL_INT32;
+typedef short CYDL_INT16;
+typedef char CYDL_INT8;
 
-	typedef double CYDL_FLOAT64;
-	typedef float CYDL_FLOAT32;
+typedef double CYDL_FLOAT64;
+typedef float CYDL_FLOAT32;
 
 #elif defined(CYDL_ARCH_SPARC64) || defined(CYDL_ARCH_SPARC32)
-	typedef long CYDL_INT64;
-	typedef int CYDL_INT32;
-	typedef short CYDL_INT16;
-	typedef char CYDL_INT8;
+typedef long CYDL_INT64;
+typedef int CYDL_INT32;
+typedef short CYDL_INT16;
+typedef char CYDL_INT8;
 
-	typedef double CYDL_FLOAT64;
-	typedef float CYDL_FLOAT32;
+typedef double CYDL_FLOAT64;
+typedef float CYDL_FLOAT32;
 
 #elif defined(CYDL_ARCH_MIPS64) || defined(CYDL_ARCH_MIPS32)
-	typedef long long CYDL_INT64;
-	typedef int CYDL_INT32;
-	typedef short CYDL_INT16;
-	typedef char CYDL_INT8;
+typedef long long CYDL_INT64;
+typedef int CYDL_INT32;
+typedef short CYDL_INT16;
+typedef char CYDL_INT8;
 
-	typedef double CYDL_FLOAT64;
-	typedef float CYDL_FLOAT32;
+typedef double CYDL_FLOAT64;
+typedef float CYDL_FLOAT32;
 
 #else // Unknown architecture
-	typedef long long CYDL_INT64;
-	typedef int CYDL_INT32;
-	typedef short CYDL_INT16;
-	typedef char CYDL_INT8;
+typedef long long CYDL_INT64;
+typedef int CYDL_INT32;
+typedef short CYDL_INT16;
+typedef char CYDL_INT8;
 
-	typedef double CYDL_FLOAT64;
-	typedef float CYDL_FLOAT32;
+typedef double CYDL_FLOAT64;
+typedef float CYDL_FLOAT32;
 
 #endif
 
 #define CYDL_RETURN_ON_FAIL( expr ) do { if (!(expr)) return 0; } while (0)
-#define CYDL_CONCAT( X , Y ) X##Y
-#define CYDL_CONCAT_3( X , Y , Z ) X##Y##Z
+#define CYDL_CONCAT_INTERNAL(X, Y) X##Y
+#define CYDL_CONCAT_3_INTERNAL(X, Y, Z) X##Y##Z
+
+#define CYDL_CONCAT(X, Y) CYDL_CONCAT_INTERNAL(X, Y)
+#define CYDL_CONCAT_3(X, Y, Z) CYDL_CONCAT_3_INTERNAL(X, Y, Z)
+
 #define CYDL_CONCAT_WITH_DELIMITER( X , _CYDL_DELIMITER_PARAM , Z ) CYDL_CONCAT_3(X, _CYDL_DELIMITER_PARAM, Z)
 #define CYDL_DEFAULT_DELIMITER _
 #ifndef CYDL_VERSIONING
@@ -273,7 +290,8 @@
 #endif
 
 #ifndef CYDL_VERSIONING_NAMESPACE
-#   define CYDL_VERSIONING_NAMESPACE CYDL_CONCAT(cydl_version_, CYDL_VERSIONING_DETAIL)
+#   define CYDL_VERSIONING_NAMESPACE_INTERNAL( _VERSIONING_PARAM_) CYDL_CONCAT(cydl_version_, _VERSIONING_PARAM_)
+#   define CYDL_VERSIONING_NAMESPACE CYDL_VERSIONING_NAMESPACE_INTERNAL(CYDL_VERSIONING_DETAIL)
 #endif
 
 // Inline namespace for versioning control
@@ -311,12 +329,12 @@
 #define CYDL_TEMPLATE_INTERNAL_CFLAG __attribute__((__visibility__("internal")))
 
 #if defined(CYDL_COMP_CLANG) && defined(CYDL_COMP_GNUC)
-	#define DO_PRAGMA(x) _Pragma(#x)
-	#define CYDL_WARNING(x) DO_PRAGMA(GCC warning x)
+	#define DO_PRAGMA( x ) _Pragma(#x)
+	#define CYDL_WARNING( x ) DO_PRAGMA(GCC warning x)
 #elif defined(_MSC_VER)
 #define CYDL_WARNING(x) __pragma(message(x))
 #else
-    #define CYDL_WARNING(x) /* Other compilers */
+	#define CYDL_WARNING(x) /* Other compilers */
 #endif
 
 
