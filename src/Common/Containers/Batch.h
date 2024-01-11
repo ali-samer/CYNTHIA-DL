@@ -36,7 +36,7 @@ CYDL_BEGIN_LIB_NAMESPACE
 
 			}
 
-			auto SubBatchMatrix(CYDL_SIZET)
+			auto SubBatchMatrix(CYDL_SIZET);
 
 		private:
 			CYDL_VDETAILS::ContinuousMemory<ElementType , DeviceType > m_memory;

@@ -2,6 +2,7 @@
 #include "neurocyn.h"
 #include <cmath>
 #include <string>
+#include <signal.h>
 #include "cydl.h"
 
 
@@ -11,4 +12,8 @@ int main ( )
 	std::cout << "CYDL VERSION IS AT LEAST 0.1.0: " <<  std::boolalpha << CYDL_VERSION_AT_LEAST(0,2,0) << std::endl;
 	#endif
 	return 0;
+
+	#ifdef SIGHUP
+	std::cout << "SIGhUP is defined: " << SIGHUP << std::endl;
+	#endif
 }
