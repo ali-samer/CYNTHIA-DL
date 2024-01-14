@@ -1,0 +1,23 @@
+{
+	"bmi-installation" : null,
+	"compiler-frontend-variant" : "GNU",
+	"compiler-id" : "GNU",
+	"compiler-simulate-id" : "",
+	"config" : "Debug",
+	"cxx-modules" : {},
+	"dir-cur-bld" : "/Users/samer.ali/CLionProjects/CYNTHIA-DL/cmake-build-debug/_deps/eigen-build/lapack",
+	"dir-cur-src" : "/Users/samer.ali/CLionProjects/CYNTHIA-DL/cmake-build-debug/_deps/eigen-src/lapack",
+	"dir-top-bld" : "/Users/samer.ali/CLionProjects/CYNTHIA-DL/cmake-build-debug",
+	"dir-top-src" : "/Users/samer.ali/CLionProjects/CYNTHIA-DL",
+	"exports" : [],
+	"include-dirs" : 
+	[
+		"_deps/eigen-src",
+		"_deps/eigen-src/lapack/../blas"
+	],
+	"language" : "Fortran",
+	"linked-target-dirs" : [],
+	"module-dir" : "/Users/samer.ali/CLionProjects/CYNTHIA-DL/cmake-build-debug/_deps/eigen-build/lapack",
+	"submodule-ext" : ".smod",
+	"submodule-sep" : "@"
+}

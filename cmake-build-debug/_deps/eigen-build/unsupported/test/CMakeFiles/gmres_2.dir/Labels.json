@@ -1,0 +1,16 @@
+{
+	"sources" : 
+	[
+		{
+			"file" : "/Users/samer.ali/CLionProjects/CYNTHIA-DL/cmake-build-debug/_deps/eigen-src/unsupported/test/gmres.cpp"
+		}
+	],
+	"target" : 
+	{
+		"labels" : 
+		[
+			"BuildUnsupported"
+		],
+		"name" : "gmres_2"
+	}
+}
