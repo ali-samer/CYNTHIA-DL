@@ -1,5 +1,13 @@
 #pragma once
 
+
+
+
+#ifdef CYDL_EIGEN_SUPPORT
+	#include <Eigen/Dense>
+	#include <Eigen/Core>
+#endif
+
 CYDL_BEGIN_LIB_NAMESPACE
 
 template < typename T , typename Device >
@@ -67,7 +75,31 @@ private:
 	CYDL_SIZET m_rowLen;
 };
 
+#ifdef CYDL_EIGEN_SUPPORT
+
+	const int DynamicDim = Eigen::Dynamic;
+
+	template <
+		typename T,
+		int Rows = DynamicDim,
+		int Cols = DynamicDim,
+		typename Device = DeviceTags::CPU
+	>
+	class MatrixXXX;
+
+// Specialization for CPU
+	template <typename T, int Rows, int Cols>
+	class MatrixXXX<T, Rows, Cols, DeviceTags::CPU> : public Eigen::Matrix<T, Rows, Cols> {
+	public:
+		using Eigen::Matrix<T, Rows, Cols>::Matrix;
+		// ...
+	};
+#endif
+
 template < typename T , typename Device >
 CYDL_CONSTEXPR bool IsMatrix< Matrix< T , Device > > = true;
 
 CYDL_END_LIB_NAMESPACE
+
+
+
