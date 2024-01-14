@@ -69,6 +69,11 @@ if (CYDL_STANDALONE)
     message(STATUS "Cynthia-DL: build standalone")
 endif ()
 
+########################################################
+## Dependency Options:
+########################################################
+
+option(CYDL_USE_EIGEN "Enable Eigen support in the framework" ON)
 
 ########################################################
 ## Build Options:
@@ -206,7 +211,11 @@ if (NOT MSVC)
 endif()
 
 
+########################################################
+## Configuration:
+########################################################
 
+configure_file(Config.h.in Config.h)
 
 if(xtl_FOUND)
     message(STATUS "xtl: ${xtl_DIR}")
@@ -236,11 +245,20 @@ include_directories(include)
 include_directories(${CMAKE_SOURCE_DIR}/src)
 
 include_directories(src/Core/utils)
+include_directories(${CMAKE_BINARY_DIR})
 
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/cmake")
 
 add_subdirectory(src)
 add_subdirectory(doc)
 
+if (CYDL_USE_EIGEN)
+    add_subdirectory(deps/Eigen)
+endif ()
+
 add_executable(cynthia Sandbox/src/main.cpp ${SRC_FILES})
 target_precompile_headers(cynthia PUBLIC src/Core/utils/Macros.h)
+
+if (CYDL_USE_EIGEN)
+    target_link_libraries(cynthia Eigen3::Eigen)
+endif ()

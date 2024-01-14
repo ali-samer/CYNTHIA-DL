@@ -339,5 +339,11 @@ typedef float CYDL_FLOAT32;
 	#define CYDL_WARNING(x) /* Other compilers */
 #endif
 
+/// \Dependencies
+#include "Config.h"
+
+#ifdef CYDL_USE_EIGEN
+#   define CYDL_EIGEN_SUPPORT 1
+#endif
 
 #endif // End CYDL_DEFINE_MACROS
