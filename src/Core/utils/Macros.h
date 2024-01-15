@@ -133,14 +133,15 @@
 #endif
 
 // valid macros since C++98
+
 #define CYDL_STRONG_INLINE inline
-#   if defined(CYDL_COMP_GNUC) || defined(CYDL_COMP_CLANG) || defined(CYDL_COMP_ICC)
-#       define CYDL_FORCE_INLINE __attribute__((always_inline)) inline // this will force the compiler to `inline`
-#   elif defined(CYDL_COMP_MSVC)
-#       define CYDL_FORCE_INLINE __forceinline
-#   else
-#       define CYDL_FORCE_INLINE CYDL_STRONG_INLINE
-#   endif
+#if defined(CYDL_COMP_GNUC) || defined(CYDL_COMP_CLANG) || defined(CYDL_COMP_ICC)
+#   define CYDL_FORCE_INLINE __attribute__((always_inline)) inline // this will force the compiler to `inline`
+#elif defined(CYDL_COMP_MSVC)
+#   define CYDL_FORCE_INLINE __forceinline
+#else
+#   define CYDL_FORCE_INLINE CYDL_STRONG_INLINE
+#endif
 #define CYDL_STRONG_EXPLICIT explicit
 
 #if __cplusplus >= 201703L
@@ -166,7 +167,7 @@
 #   define CYDL_DECLARE_MODULE( module_name ) export module module_name;
 #   define CYDL_IMPORT_MODULE( module_name ) import module_name
 #else
-#   define CYDL_IMPORT_MODULE(module_name) #include <module_name.h>
+#   define CYDL_IMPORT_MODULE(module_name)
 #endif
 
 #if CYDL_MODULE_EXPORT_SUPPORT
@@ -325,10 +326,26 @@ typedef float CYDL_FLOAT32;
 	#define CYDL_MEMORY_POOL_EXPANSION_SIZE CYDL_DEFAULT_EXPANSION_SPACE
 #endif
 
-#define CYDL_DEFAULT_AFLAG __attribute__((__visibility__("default")))
-#define CYDL_HIDDEN_AFLAG __attribute__((__visibility__("hidden")))
-#define CYDL_PROTECTED_AFLAG __attribute__((__visibility__("protected")))
-#define CYDL_INTERNAL_AFLAG __attribute__((__visibility__("internal")))
+/// \Attributes
+#ifdef _MSC_VER
+#   define CYDL_DEFAULT_AFLAG __declspec(dllexport)
+#   define CYDL_HIDDEN_AFLAG // MSVC does not support hidden visibility
+#   define CYDL_PROTECTED_AFLAG // No direct equivalent in MSVC
+#   define CYDL_INTERNAL_AFLAG // No direct equivalent in MSVC
+#elif defined(__GNUC__)
+#   define CYDL_DEFAULT_AFLAG __attribute__((__visibility__("default")))
+#   define CYDL_HIDDEN_AFLAG __attribute__((__visibility__("hidden")))
+#   define CYDL_PROTECTED_AFLAG __attribute__((__visibility__("protected")))
+#   define CYDL_INTERNAL_AFLAG __attribute__((__visibility__("internal")))
+#   define CYDL_PACKED_AFLAG __attribute__((packed))
+#else
+#   define CYDL_DEFAULT_AFLAG
+#   define CYDL_HIDDEN_AFLAG
+#   define CYDL_PROTECTED_AFLAG
+#   define CYDL_INTERNAL_AFLAG
+#endif
+
+
 
 #if defined(CYDL_COMP_CLANG) && defined(CYDL_COMP_GNUC)
 	#define DO_PRAGMA( x ) _Pragma(#x)
@@ -345,5 +362,6 @@ typedef float CYDL_FLOAT32;
 #ifdef CYDL_USE_EIGEN
 #   define CYDL_EIGEN_SUPPORT 1
 #endif
+
 
 #endif // End CYDL_DEFINE_MACROS
