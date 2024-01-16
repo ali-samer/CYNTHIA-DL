@@ -1,7 +1,7 @@
 #pragma once
 
-#include "Common/Utils/IncludeUtils.h"
-#include "Common/Utils/Utils.h"
+#include "Core/Utils/IncludeUtils.h"
+#include "Core/Utils/Utils.h"
 
 CYDL_BEGIN_LIB_NAMESPACE
 CYDL_BEGIN_LIB_DETAILS_NAMESPACE

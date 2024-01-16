@@ -29,8 +29,8 @@
 #include <stdlib.h>
 
 
-#include "Common/Utils/IncludeUtils.h"
-#include "Common/Utils/Utils.h"
+#include "Core/Utils/IncludeUtils.h"
+#include "Core/Utils/Utils.h"
 #include "Tuple.h"
 
 /**

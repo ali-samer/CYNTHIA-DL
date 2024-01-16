@@ -8,10 +8,12 @@ struct CYDL_DEFAULT_AFLAG CategoryTags CYDL_FINAL
 	struct Scalar;
 	struct Vector;
 	struct Matrix;
+	struct Array;
 
 	struct BatchScalar; // list of scalars
 	struct BatchVector; // list of vectors
 	struct BatchMatrix; // list of matrices
+	struct BatchArray;
 };
 
 /// \Scalars
@@ -145,6 +147,50 @@ CYDL_CONSTEXPR bool IsBatchMatrix< T && > = IsBatchMatrix< T >;
 
 template < typename T >
 CYDL_CONSTEXPR bool IsBatchMatrix< const T && > = IsBatchMatrix< T >;
+
+/// \Array
+template < typename T >
+CYDL_CONSTEXPR bool IsArray = false;
+
+template < >
+CYDL_CONSTEXPR bool IsArray< CategoryTags::Array > = true;
+
+template < typename T >
+CYDL_CONSTEXPR bool IsArray< const T > = IsArray< T >;
+
+template < typename T >
+CYDL_CONSTEXPR bool IsArray< T & > = IsArray< T >;
+
+template < typename T >
+CYDL_CONSTEXPR bool IsArray< const T & > = IsArray< T >;
+
+template < typename T >
+CYDL_CONSTEXPR bool IsArray< T && > = IsArray< T >;
+
+template < typename T >
+CYDL_CONSTEXPR bool IsArray< const T && > = IsArray< T >;
+
+/// \Array: Batch Checking
+template < typename T >
+CYDL_CONSTEXPR bool IsBatchArray = false;
+
+template < >
+CYDL_CONSTEXPR bool IsBatchArray< CategoryTags::BatchArray > = true;
+
+template < typename T >
+CYDL_CONSTEXPR bool IsBatchArray< const T > = IsBatchArray< T >;
+
+template < typename T >
+CYDL_CONSTEXPR bool IsBatchArray< T & > = IsBatchArray< T >;
+
+template < typename T >
+CYDL_CONSTEXPR bool IsBatchArray< const T & > = IsBatchArray< T >;
+
+template < typename T >
+CYDL_CONSTEXPR bool IsBatchArray< T && > = IsBatchArray< T >;
+
+template < typename T >
+CYDL_CONSTEXPR bool IsBatchArray< const T && > = IsBatchArray< T >;
 
 CYDL_BEGIN_LIB_DETAILS_NAMESPACE
 

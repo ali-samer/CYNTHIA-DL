@@ -1,11 +1,11 @@
 #pragma once
 
 #include "Scalar.h"
-#include "Common/Internal/EvalBuffer.h"
+#include "Core/Internal/EvalBuffer.h"
 
 
 CYDL_BEGIN_LIB_NAMESPACE
-template < typename T, typename Device, typename Scalar = Scalar<int, DeviceTags::CPU> >
+template < typename T, typename Device, typename Scalar >
 class CYDL_DEFAULT_AFLAG TrivialMatrix
 {
 public:
@@ -17,7 +17,11 @@ public:
 	typedef T& Reference;
 	typedef T&& R_reference;
 
-	TrivialMatrix(CYDL_SIZET p_rowNum, CYDL_SIZET p_colNum, Scalar p_val);
+	TrivialMatrix(CYDL_SIZET p_rowNum, CYDL_SIZET p_colNum, Scalar p_val)
+		: m_rowNum(p_rowNum), m_colNum(p_colNum), m_value(p_val)
+	{
+
+	}
 
 	CYDL_FORCE_INLINE CYDL_SIZET rows ( ) const CYDL_NOEXCEPT { return m_rowNum; }
 	CYDL_FORCE_INLINE CYDL_SIZET cols ( ) const CYDL_NOEXCEPT { return m_colNum; }
@@ -34,7 +38,7 @@ private:
 };
 
 template < typename T, typename Device >
-CYDL_CONSTEXPR bool IsMatrix<TrivialMatrix<T, Device>> = true;
+CYDL_CONSTEXPR bool IsMatrix<TrivialMatrix<T, Device, CategoryTags::Scalar>> = true;
 
 template < typename T, typename Device, typename Val_t >
 auto make_trivial_matrix(CYDL_SIZET p_rowNum, CYDL_SIZET p_colNum, Val_t&& m_val)
@@ -43,10 +47,10 @@ auto make_trivial_matrix(CYDL_SIZET p_rowNum, CYDL_SIZET p_colNum, Val_t&& m_val
 
 	if CYDL_CONSTEXPR (IsScalar<RawVal>)
 	{
-		if CYDL_CONSTEXPR (std::is_same_v<Device, DeviceTags::CPU>)
-		{
-			return TrivialMatrix<T, Device, RawVal >(p_rowNum, p_colNum, m_val);
-		}
+		static_assert(std::is_same<typename RawVal::DeviceType, Device>::value ||
+		              std::is_same<typename RawVal::DeviceType, DeviceTags::CPU>::value,
+		              "Device type mismatch.");
+		return TrivialMatrix< T, Device, RawVal >(p_rowNum, p_colNum, m_val);
 	}
 	else
 	{

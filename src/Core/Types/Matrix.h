@@ -28,6 +28,7 @@ public:
 	{
 		assert( availableForWrite( ) );
 		assert( ( p_rowID < m_rowNum ) && ( p_colID < m_colNum ) );
+		assert( ( p_rowID >= 0 ) && ( p_colID >= 0 ) );
 		m_memory.rawMemory( )[ p_rowID * m_rowLen + p_colID ] = val;
 	}
 	CYDL_STRONG_INLINE const auto operator() ( CYDL_SIZET p_rowID , CYDL_SIZET p_colID ) const CYDL_NOEXCEPT
@@ -43,7 +44,7 @@ public:
 	Matrix subMatrix ( CYDL_SIZET p_rowA , CYDL_SIZET p_rowB , CYDL_SIZET p_colA , CYDL_SIZET p_colB ) const
 	{
 		assert( (p_rowA < m_rowNum) && (p_colA < m_colNum) );
-		assert( (p_colB <= m_rowNum) && (p_colB <= m_colNum) );
+		assert( (p_rowB <= m_rowNum) && (p_colB <= m_colNum) );
 
 		pointer pos = m_memory.rawMemory() + p_rowA * m_rowLen + p_colA;
 		return Matrix(m_memory.sharedPtr(),
@@ -56,7 +57,7 @@ public:
 private:
 	Matrix ( std::shared_ptr< ElementType > p_memory ,
 	         pointer p_memoryStart , CYDL_SIZET p_rowNum , CYDL_SIZET p_colNum , CYDL_SIZET p_rowLen )
-		: m_memory( p_memory , p_memory ) ,
+		: m_memory( p_memory , p_memoryStart ) ,
 		  m_rowNum( p_rowNum ) ,
 		  m_colNum( p_colNum ) ,
 		  m_rowLen( p_rowLen ) { }

@@ -257,7 +257,7 @@ if (CYDL_USE_EIGEN)
 endif ()
 
 add_executable(cynthia Sandbox/src/main.cpp ${SRC_FILES})
-target_precompile_headers(cynthia PUBLIC src/Core/utils/Macros.h)
+target_precompile_headers(cynthia PUBLIC src/Core/Utils/Macros.h)
 
 if (CYDL_USE_EIGEN)
     target_link_libraries(cynthia Eigen3::Eigen)

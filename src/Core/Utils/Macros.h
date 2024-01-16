@@ -345,7 +345,10 @@ typedef float CYDL_FLOAT32;
 #   define CYDL_INTERNAL_AFLAG
 #endif
 
+#ifndef NDEBUG
 
+	#define CYDL_DEBUG_MSG( msg ) std::cerr << "Debug: " << __FILE__ << ":" << __LINE__ << ":" << __func__ << ":" << msg << std::endl;
+#endif
 
 #if defined(CYDL_COMP_CLANG) && defined(CYDL_COMP_GNUC)
 	#define DO_PRAGMA( x ) _Pragma(#x)

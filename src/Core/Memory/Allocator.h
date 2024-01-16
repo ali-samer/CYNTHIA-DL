@@ -1,8 +1,8 @@
 #pragma once
 
 
-#include "Common/Tags/Devices.h"
-#include "Common/Policies/CreationPolicy.h"
+#include "Core/Tags/Devices.h"
+#include "Core/Policies/CreationPolicy.h"
 #include <memory>
 
 CYDL_BEGIN_LIB_NAMESPACE
