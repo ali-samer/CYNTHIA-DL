@@ -194,6 +194,23 @@ CYDL_CONSTEXPR bool IsBatchArray< const T && > = IsBatchArray< T >;
 
 CYDL_BEGIN_LIB_DETAILS_NAMESPACE
 
+template < typename T >
+struct IsIterator_
+{
+	template < typename R >
+	static std::true_type Test( typename std::iterator_traits<R>::iterator_category*)
+	{
+
+	}
+
+	template < typename R >
+	static std::false_type Test(typename std::iterator_traits<R>::iterator_category*)
+	{
+
+	}
+	CYDL_CONSTEXPR static bool value = decltype( Test<T>( nullptr ) )::value;
+};
+
 /// \Mapping: Data Category To Types
 template < typename T >
 struct CYDL_DEFAULT_AFLAG DataCategory_ CYDL_FINAL
@@ -250,4 +267,8 @@ CYDL_END_LIB_DETAILS_NAMESPACE
 
 template < typename T >
 using DataCategory_t = typename CYDL_VDETAILS::DataCategory_< T >::type;
+
+template < typename T >
+CYDL_CONSTEXPR bool IsIterator = CYDL_VDETAILS::IsIterator_<T>::value;
+
 CYDL_END_LIB_NAMESPACE

@@ -73,8 +73,10 @@ endif ()
 ## Dependency Options:
 ########################################################
 
-option(CYDL_USE_EIGEN "Enable Eigen support in the framework" ON)
-
+option(CYDL_USE_EIGEN "Enable Eigen support in the framework" OFF)
+option(CYDL_USE_RAPIDJSON "Enable rapidJSON in the framework" OFF)
+option(CYDL_USE_EIGEN_VCPKG "Enable Eigen support in the framework" ON)
+option(CYDL_USE_RAPIDJSON_VCPKG "Enable rapidJSON in the framework" ON)
 ########################################################
 ## Build Options:
 ########################################################
@@ -217,9 +219,6 @@ endif()
 
 configure_file(Config.h.in Config.h)
 
-if(xtl_FOUND)
-    message(STATUS "xtl: ${xtl_DIR}")
-endif ()
 set(SOURCE_DIRS
         "${CMAKE_SOURCE_DIR}/src/Core"
         "${CMAKE_SOURCE_DIR}/src/Data"
@@ -230,20 +229,28 @@ set(SOURCE_DIRS
         "${CMAKE_SOURCE_DIR}/src/Activations"
 )
 
-set(SRC_FILES "")
+########################################################
+## Append All Source File For Static Linkage:
+########################################################
 
-foreach(SOURCE_DIR ${SOURCE_DIRS})
+set(CYDL_SRC_FILES "")
+
+foreach(CYDL_CURR_SOURCE_DIR ${SOURCE_DIRS})
     file(GLOB SOURCE_FILES_IN_DIR
-            "${SOURCE_DIR}/*.cpp"
-            "${SOURCE_DIR}/*.c"
+            "${CYDL_CURR_SOURCE_DIR}/*.cpp"
+            "${CYDL_CURR_SOURCE_DIR}/*.c"
     )
-    list(APPEND SRC_FILES ${SOURCE_FILES_IN_DIR})
+    list(APPEND CYDL_SRC_FILES ${SOURCE_FILES_IN_DIR})
 endforeach()
-message("src files: ${SRC_FILES}")
+message("src files: ${CYDL_SRC_FILES}")
+
+########################################################
+## Directories Scope Includes:
+########################################################
 
 include_directories(include)
 include_directories(${CMAKE_SOURCE_DIR}/src)
-
+include_directories(${CMAKE_SOURCE_DIR})
 include_directories(src/Core/utils)
 include_directories(${CMAKE_BINARY_DIR})
 
@@ -252,13 +259,31 @@ list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/cmake")
 add_subdirectory(src)
 add_subdirectory(doc)
 
+########################################################
+## Dependencies Configuration Options:
+########################################################
+find_package(Eigen3 CONFIG REQUIRED)
+find_package(RapidJSON CONFIG REQUIRED)
 if (CYDL_USE_EIGEN)
     add_subdirectory(deps/Eigen)
 endif ()
 
-add_executable(cynthia Sandbox/src/main.cpp ${SRC_FILES})
+if (CYDL_USE_RAPIDJSON)
+    add_subdirectory(deps/RapidJSON)
+endif ()
+
+add_executable(cynthia Sandbox/src/main.cpp ${CYDL_SRC_FILES})
 target_precompile_headers(cynthia PUBLIC src/Core/Utils/Macros.h)
+
+########################################################
+## Dependencies Configuration Options Linkage:
+########################################################
+target_link_libraries(cynthia PRIVATE Eigen3::Eigen RapidJSON)
 
 if (CYDL_USE_EIGEN)
     target_link_libraries(cynthia Eigen3::Eigen)
+endif ()
+
+if (CYDL_USE_RAPIDJSON)
+    target_link_libraries(cynthia rapidjson)
 endif ()

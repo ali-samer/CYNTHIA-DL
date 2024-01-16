@@ -19,7 +19,7 @@ set(DOXYGEN_EXCLUDE_PATTERNS "*/detail/*")
 # Note: Use doxygen_add_docs(doxygen-doc ALL ...) if you want your
 # documentation to be created by default each time you build. Without the # keyword
 # you need to explicitly invoke building of the 'doc' target.
-doxygen_add_docs(doxygen-doc ${PROJECT_SOURCE_DIR}/include COMMENT
+doxygen_add_docs(cydl-doxygen-doc ${PROJECT_SOURCE_DIR}/include COMMENT
 "Generating API documentation with Doxygen")
 
 find_package(Sphinx REQUIRED)
@@ -28,7 +28,7 @@ configure_file(${CMAKE_CURRENT_SOURCE_DIR}/conf.py.in
         ${CMAKE_SOURCE_DIR}/cmake-build-debug/doc/conf.py @ONLY)
 
 add_custom_target(
-        sphinx-doc ALL
+        cydl-sphinx-doc ALL
         COMMAND ${SPHINX_EXECUTABLE} -b html -c ${CMAKE_CURRENT_BINARY_DIR}
                 ${CMAKE_CURRENT_SOURCE_DIR} ${CMAKE_CURRENT_BINARY_DIR}/html
         WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
@@ -37,4 +37,4 @@ add_custom_target(
 )
 
 # must force cmake to call doxygen each time we generate sphinx docs:
-add_dependencies(sphinx-doc doxygen-doc)
+add_dependencies(cydl-sphinx-doc cydl-doxygen-doc)
