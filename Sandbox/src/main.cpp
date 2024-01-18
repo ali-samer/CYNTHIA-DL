@@ -1,19 +1,19 @@
-#include <iostream>
-#include "neurocyn.h"
-#include <cmath>
-#include <string>
-#include <signal.h>
 #include "cydl.h"
-#include ""
+
+
+#include <cstdio>
+#include <iostream>
+#include <memory>
+#include <stdexcept>
+#include <array>
+#include "Eigen/Dense"
+#include "Eigen/Core"
+
+const char* sep() { return "\n--------------------------\n"; }
 
 int main ( )
 {
-	#ifdef CYDL_DEFINE_GLOBAL_MACROS
-	std::cout << "CYDL VERSION IS AT LEAST 0.1.0: " <<  std::boolalpha << CYDL_VERSION_AT_LEAST(0,2,0) << std::endl;
-	#endif
-	return 0;
+	using std::cout, std::endl;
 
-	#ifdef SIGHUP
-	std::cout << "SIGhUP is defined: " << SIGHUP << std::endl;
-	#endif
+	return 0;
 }

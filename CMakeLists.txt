@@ -73,10 +73,10 @@ endif ()
 ## Dependency Options:
 ########################################################
 
-option(CYDL_USE_EIGEN "Enable Eigen support in the framework" OFF)
+option(CYDL_USE_EIGEN "Enable Eigen support in the framework" ON)
 option(CYDL_USE_RAPIDJSON "Enable rapidJSON in the framework" OFF)
-option(CYDL_USE_EIGEN_VCPKG "Enable Eigen support in the framework" ON)
-option(CYDL_USE_RAPIDJSON_VCPKG "Enable rapidJSON in the framework" ON)
+option(CYDL_USE_EIGEN_VCPKG "Enable Eigen support in the framework" OFF)
+option(CYDL_USE_RAPIDJSON_VCPKG "Enable rapidJSON in the framework" OFF)
 ########################################################
 ## Build Options:
 ########################################################
@@ -121,6 +121,7 @@ if (CYDL_GLOBAL_MACROS)
     message(STATUS "Enable cynthia's global utility macros")
 endif ()
 
+add_compile_definitions(-DCYDL_ROOT_DIR_PATH="${CMAKE_CURRENT_SOURCE_DIR}")
 
 ########################################################
 ## Building Tests and Examples:
@@ -262,8 +263,6 @@ add_subdirectory(doc)
 ########################################################
 ## Dependencies Configuration Options:
 ########################################################
-find_package(Eigen3 CONFIG REQUIRED)
-find_package(RapidJSON CONFIG REQUIRED)
 if (CYDL_USE_EIGEN)
     add_subdirectory(deps/Eigen)
 endif ()
@@ -278,7 +277,6 @@ target_precompile_headers(cynthia PUBLIC src/Core/Utils/Macros.h)
 ########################################################
 ## Dependencies Configuration Options Linkage:
 ########################################################
-target_link_libraries(cynthia PRIVATE Eigen3::Eigen RapidJSON)
 
 if (CYDL_USE_EIGEN)
     target_link_libraries(cynthia Eigen3::Eigen)

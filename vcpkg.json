@@ -5,11 +5,5 @@
   "dependencies" : [ {
     "name" : "matplotlib-cpp",
     "version>=" : "2020-08-27#2"
-  }, {
-    "name" : "eigen3",
-    "version>=" : "3.4.0#2"
-  }, {
-    "name" : "rapidjson",
-    "version>=" : "2023-07-17"
   } ]
 }

@@ -31,7 +31,7 @@ CYDL_BEGIN_LIB_NAMESPACE
 		template < typename T , typename Device >
 		auto make_zero_matrix ( CYDL_SIZET rowNum , CYDL_SIZET colNum )
 		{
-			return ZeroMatrix< T , Device, CYDL_VDETAILS::NullParam >( rowNum , colNum );
+			return ZeroMatrix< T , Device, CYDL_VUTILS::NullParam >( rowNum , colNum );
 		}
 
 CYDL_END_LIB_NAMESPACE

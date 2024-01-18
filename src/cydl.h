@@ -25,6 +25,7 @@
 
 #include "Core/Internal/LowerAccessImpl.h"
 #include "Core/Internal/EvalBuffer.h"
+#include "Core/Internal/Shape.h"
 
 #include "Core/Containers/Map.h"
 #include "Core/Containers/Tuple.h"

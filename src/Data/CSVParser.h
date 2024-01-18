@@ -4,12 +4,10 @@
 #include <vector>
 #include <tuple>
 
+#include "DataProcessing/CSV.h"
+#include <iostream>
 
 CYDL_BEGIN_LIB_NAMESPACE
-
-		CYDL_BEGIN_LIB_DETAILS_NAMESPACE
-#include "DataProcessing/CSV.h"
-		CYDL_END_LIB_DETAILS_NAMESPACE
 
 		template < CYDL_SIZET Cols , typename... T >
 		class CSVParser
@@ -39,7 +37,7 @@ CYDL_BEGIN_LIB_NAMESPACE
 							fillValues_(std::make_index_sequence<m_colsNum - 1>{}, m_row, m_values);
 						}
 					}
-				} catch(const CYDL_VDETAILS::io::error::no_digit& e) {
+				} catch(const io::error::no_digit& e) {
 					std::cerr << e.what() << std::endl;
 				}
 
@@ -68,7 +66,7 @@ CYDL_BEGIN_LIB_NAMESPACE
 			std::vector< std::string > m_categoricalCol;
 			std::vector< double >      m_values;
 			RowType                    m_row;
-			CYDL_VDETAILS::io::CSVReader< Cols > m_csvReader;
+			io::CSVReader< Cols > m_csvReader;
 		};
 
 CYDL_END_LIB_NAMESPACE

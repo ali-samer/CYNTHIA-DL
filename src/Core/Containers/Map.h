@@ -57,7 +57,7 @@ struct InitContainer
 {
 	static_assert( NumOfTypeParams , "You must specify <typename... keys> to set "
 	                                 "key-valued pairs to their corresponding identifiers." );
-	using type = typename InitContainer< NumOfTypeParams - 1 , TypeContainer , NullParam , Pack... >::type;
+	using type = typename InitContainer< NumOfTypeParams - 1 , TypeContainer , CYDL_VUTILS::NullParam , Pack... >::type;
 };
 
 // Base case: When NumOfTypeParams reaches 0, stop padding and define the container type.
