@@ -6,6 +6,7 @@ project("Cynthia-DL" VERSION 0.1.0 )
 
 
 set(CMAKE_CXX_STANDARD 23)
+set(CMAKE_CXX_STANDARD_REQUIRED True)
 
 
 # Remove this block after bumping CMake to v3.21.0
@@ -77,6 +78,7 @@ option(CYDL_USE_EIGEN "Enable Eigen support in the framework" ON)
 option(CYDL_USE_RAPIDJSON "Enable rapidJSON in the framework" OFF)
 option(CYDL_USE_EIGEN_VCPKG "Enable Eigen support in the framework" OFF)
 option(CYDL_USE_RAPIDJSON_VCPKG "Enable rapidJSON in the framework" OFF)
+
 ########################################################
 ## Build Options:
 ########################################################
@@ -129,8 +131,37 @@ add_compile_definitions(-DCYDL_ROOT_DIR_PATH="${CMAKE_CURRENT_SOURCE_DIR}")
 
 option(CYDL_BUILD_TESTS "Cynthia-DL: build tests" ${CYDL_STANDALONE})
 option(CYDL_BUILD_EXAMPLES "Cynthia-DL: build example" ${CYDL_STANDALONE})
+message("++++++++++++++++++++++++++")
+message(STATUS "CYDL_STANDALONE: ${CYDL_STANDALONE}")
 
+#################### TEMPORARY ###################
+set(GMOCK_SEARCH_PATHS
+        /opt/homebrew/lib
+        /usr/local/lib
+        /usr/lib
+)
 
+# Try to find libgmock.a
+find_library(GMOCK_LIBRARY
+        NAMES gmock
+        PATHS ${GMOCK_SEARCH_PATHS}
+)
+
+# Try to find libgmock_main.a
+find_library(GMOCK_MAIN_LIBRARY
+        NAMES gmock_main
+        PATHS ${GMOCK_SEARCH_PATHS}
+)
+
+# Check if the libraries were found
+if(NOT GMOCK_LIBRARY)
+    message(FATAL_ERROR "libgmock.a not found")
+endif()
+
+if(NOT GMOCK_MAIN_LIBRARY)
+    message(STATUS "libgmock_main.a not found, using custom main or gtest_main")
+endif()
+set( GMOCK_LIBRARIES ${GMOCK_LIBRARY} ${GMOCK_MAIN_LIBRARY})
 ########################################################
 ## Cynthia-DL Performance Configuration Options:
 ########################################################
@@ -203,16 +234,6 @@ if (CYDL_SANITIZE_UNDEFINED)
 endif ()
 
 
-option(CYDL_AVX                     "Cynthia-DL: enable AVX"                                     ON)
-option(CYDL_AVX2                    "Cynthia-DL: enable AVX2"                                    ON)
-option(CYDL_AVX512                  "Cynthia-DL: enable AVX512"                                  OFF)
-option(CYDL_AVX512_VBMI             "Cynthia-DL: enable AVX512-VBMI"                             OFF)
-option(CYDL_AVX512_VNNI             "Cynthia-DL: enable AVX512-VNNI"                             OFF)
-option(CYDL_FMA                     "Cynthia-DL: enable FMA"                                     ON)
-if (NOT MSVC)
-    option(CYDL_F16C                "Cynthia-DL: enable F16C"                                    ON)
-endif()
-
 
 ########################################################
 ## Configuration:
@@ -246,6 +267,16 @@ endforeach()
 message("src files: ${CYDL_SRC_FILES}")
 
 ########################################################
+## Configure Tests:
+########################################################
+
+if (CYDL_BUILD_TESTS)
+    enable_testing()
+    find_package(GTest REQUIRED)
+    include_directories(${GTEST_INCLUDE_DIRS})
+endif ()
+
+########################################################
 ## Directories Scope Includes:
 ########################################################
 
@@ -269,6 +300,14 @@ endif ()
 
 if (CYDL_USE_RAPIDJSON)
     add_subdirectory(deps/RapidJSON)
+endif ()
+find_package(Threads REQUIRED)
+
+if (CYDL_BUILD_TESTS)
+    add_executable(cynthia_tests tests/main_tests.cpp)
+    target_link_libraries(cynthia_tests ${GTEST_BOTH_LIBRARIES} ${GMOCK_LIBRARIES} pthread)
+    message(STATUS "Linking ${GTEST_BOTH_LIBRARIES} and ${GMOCK_LIBRARIES} to cynthia_test executable")
+    message(STATUS "Linking ${pthread} to cynthia_test executable")
 endif ()
 
 add_executable(cynthia Sandbox/src/main.cpp ${CYDL_SRC_FILES})

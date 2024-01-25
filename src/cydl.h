@@ -1,5 +1,6 @@
 #include "Core/Policies/PolicyMacros.h"
 #include "Core/Policies/CheckingPolicy.h"
+#include "Core/Policies/Allocate/FixedBlockAllocation.h"
 
 #include "Core/Utils/AssertCompileTime.h"
 #include "Core/Utils/TypeTraits.h"
